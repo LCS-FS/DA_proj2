@@ -28,7 +28,7 @@ class Vertex {
     Vertex<T> *path = nullptr;
     int queueIndex = 0; 		// required by MutablePriorityQueue
 
-    void addEdge(Vertex<T> *dest, int w, int c);
+    void addEdge(Vertex<T> *dest, int dur, int c, int w);
 
 public:
     Vertex(T in);
@@ -49,8 +49,8 @@ Vertex<T>::Vertex(T in): info(in) {}
  * with a given destination vertex (d) and edge weight (w).
  */
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *d, int w, int c) {
-    adj.push_back(Edge<T>(d, w, c));
+void Vertex<T>::addEdge(Vertex<T> *d, int dur, int c, int w) {
+    adj.push_back(Edge<T>(d, dur, c, w));
 }
 
 template <class T>
@@ -78,16 +78,28 @@ Vertex<T> *Vertex<T>::getPath() const {
 template <class T>
 class Edge {
     Vertex<T> * dest;      // destination vertex
-    int weight;         // edge weight -> duration
+    int weight;
+    // edge weight -> residual capacity
     int capacity;
+    int duration;
+    int flux;
+
 public:
-    Edge(Vertex<T> *d, int w, int c);
+    int getWeight() const;
+    void setWeight(int weight);
+    int getCapacity() const;
+    void setCapacity(int capacity);
+    int getFlux() const;
+    void setFlux(int flux);
+    int getDuration() const;
+    void setDuration(int duration);
+    Edge(Vertex<T> *d, int duration, int c, int w);
     friend class Graph<T>;
     friend class Vertex<T>;
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, int w, int c): dest(d), weight(w), capacity(c){}
+Edge<T>::Edge(Vertex<T> *d, int duration, int c, int w): dest(d), weight(w), capacity(c), duration(duration), flux(0){}
 
 
 /*************************** Graph  **************************/
@@ -109,7 +121,7 @@ public:
     ~Graph();
     Vertex<T> *findVertex(const T &in) const;
     bool addVertex(const T &in);
-    bool addEdge(const T &sourc, const T &dest, int w, int c);
+    bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
 
@@ -129,7 +141,55 @@ public:
     // FP03B - All-pair shortest path -  Dynamic Programming - Floyd-Warshall
     void floydWarshallShortestPath(); //TODO...
     std::vector<T> getfloydWarshallPath(const T &origin, const T &dest) const; //TODO...
+
+    int edmondKarpFlux(T st, T ta);
+    Graph<T> residualGrid();
+    void zeroFlux();
+
+    void increaseGroupSize(T st, T ta, int inc);
+
+    void printGraph();
 };
+
+template<class T>
+int Edge<T>::getDuration() const {
+    return duration;
+}
+
+template<class T>
+void Edge<T>::setDuration(int duration) {
+    Edge::duration = duration;
+}
+
+template<class T>
+int Edge<T>::getFlux() const {
+    return flux;
+}
+
+template<class T>
+void Edge<T>::setFlux(int flux) {
+    Edge::flux = flux;
+}
+
+template<class T>
+int Edge<T>::getWeight() const {
+    return weight;
+}
+
+template<class T>
+void Edge<T>::setWeight(int weight) {
+    Edge::weight = weight;
+}
+
+template<class T>
+int Edge<T>::getCapacity() const {
+    return capacity;
+}
+
+template<class T>
+void Edge<T>::setCapacity(int capacity) {
+    Edge::capacity = capacity;
+}
 
 
 template <class T>
@@ -181,12 +241,12 @@ bool Graph<T>::addVertex(const T &in) {
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
 template <class T>
-bool Graph<T>::addEdge(const T &sourc, const T &dest, int w, int c) {
+bool Graph<T>::addEdge(const T &sourc, const T &dest, int d, int c, int w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    v1->addEdge(v2, w, c);
+    v1->addEdge(v2, d, c, w);
     return true;
 }
 
@@ -203,9 +263,11 @@ Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
     for(auto v : vertexSet) {
         v->dist = INF;
         v->path = nullptr;
+        v->visited = false;
     }
     auto s = findVertex(origin);
     s->dist = 0;
+    s->visited = true;
     return s;
 }
 
@@ -249,12 +311,15 @@ void Graph<T>::unweightedShortestPath(const T &orig) {
     auto s = initSingleSource(orig);
     std::queue< Vertex<T>* > q;
     q.push(s);
+    s->visited = true;
     while( ! q.empty() ) {
         auto v = q.front();
         q.pop();
         for(auto e: v->adj)
-            if (relax(v, e.dest, 1))
+            if (relax(v, e.dest, 1)) {
                 q.push(e.dest);
+                e.dest->visited = true;
+            }
     }
 }
 
@@ -267,11 +332,11 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
 template<class T>
 std::vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
     std::vector<T> res;
-    res.push_back(*findVertex(dest).getInfo());
-    Vertex<T> pred = *findVertex(dest);
+    Vertex<T> pred = *findVertex(dest); //pred = dest
+    if(!pred.visited) return res;
     res.push_back(pred.getInfo());
-    while(pred != origin){
-        pred = *findVertex(pred);
+    while(pred.info != origin){
+        pred = *(pred.path);
         res.push_back(pred.getInfo());
     }
     //reverse vector
@@ -332,5 +397,159 @@ void Graph<T>::setNumberEdges(int numberEdges) {
     Graph::numberEdges = numberEdges;
 }
 
+template<class T>
+int Graph<T>::edmondKarpFlux(T st, T ta) {
+    Vertex<T> origin(st);
+    std::vector<T> path;
+    int resCap = INF;
+    Graph<T> resGrid;
+
+    zeroFlux();
+
+    //determine residual grid
+    resGrid = residualGrid();
+    resGrid.unweightedShortestPath(st);
+    path = resGrid.getPath(st, ta);
+    Vertex<T> destination = *(resGrid.findVertex(ta));
+
+    //while there is a path in the Residual Grid
+    while(destination.visited){
+
+        //find minimun Cf in path
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> edge: (resGrid.findVertex(path[i]))->adj){
+                //found the edge of the path
+                if(edge.dest->info == resGrid.findVertex(path[i+1])->info){
+                    resCap = std::min(edge.getWeight(), resCap);
+                }
+            }
+        }
+
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> &edge: findVertex(path[i])->adj){
+                //found the edge of the path
+                if(edge.dest->info == findVertex(path[i+1])->info){
+                    edge.setFlux(resCap + edge.getFlux());
+                }
+            }
+        }
+
+        //determine residual grid
+        resGrid = residualGrid();
+        resGrid.unweightedShortestPath(st);
+        path = resGrid.getPath(st, ta);
+        destination = *(resGrid.findVertex(ta));
+
+    }
+
+    origin = *(findVertex(st));
+    int maxFlux = 0;
+    for(Edge<T> edge: origin.adj){
+        maxFlux+= edge.getFlux();
+    }
+    return maxFlux;
+}
+
+template<class T>
+Graph<T> Graph<T>::residualGrid() {
+    Graph<T> residualGrid;
+    //add all vertexes
+    for(auto v: vertexSet){
+        residualGrid.addVertex(v->info);
+    }
+    for(Vertex<T>* v: vertexSet){
+        for(Edge<T> edge : v->adj){
+            //Cf(u,v)
+            if(edge.capacity - edge.getFlux() > 0) residualGrid.addEdge(v->info, edge.dest->info, edge.duration, edge.capacity, edge.capacity - edge.getFlux());
+        }
+    }
+
+    for(auto v: vertexSet){
+        for(Edge<T> edge : v->adj){
+            //Cf(v,u)
+            if(edge.getFlux() > 0) residualGrid.addEdge(edge.dest->info ,v->info, edge.duration, edge.capacity, edge.getFlux());
+        }
+    }
+    return residualGrid;
+}
+
+//sets all fluxes to 0
+template<class T>
+void Graph<T>::zeroFlux() {
+    for(auto v: vertexSet){
+        for(auto edge: v->adj){
+            edge.setFlux(0);
+        }
+    }
+}
+
+template<class T>
+void Graph<T>::increaseGroupSize(T st, T ta, int inc) {
+    Vertex<T> origin = *(findVertex(st));
+    std::vector<T> path;
+    int resCap = INF;
+    Graph<T> resGrid;
+
+    //get initial flux
+    int initialFlux = 0;
+    for(Edge<T> edge: origin.adj){
+        initialFlux += edge.getFlux();
+    }
+    int newFlux = initialFlux;
+
+    //determine residual grid
+    resGrid = residualGrid();
+    resGrid.unweightedShortestPath(st);
+    path = resGrid.getPath(st, ta);
+    Vertex<T> destination = *(resGrid.findVertex(ta));
+
+    //while there is a path in the Residual Grid
+    while(newFlux - initialFlux < inc){
+
+        //find minimun Cf in path
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> edge: (resGrid.findVertex(path[i]))->adj){
+                //found the edge of the path
+                if(edge.dest->info == resGrid.findVertex(path[i+1])->info){
+                    resCap = std::min(edge.getWeight(), resCap);
+                }
+            }
+        }
+
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> &edge: findVertex(path[i])->adj){
+                //found the edge of the path
+                if(edge.dest->info == findVertex(path[i+1])->info){
+                    edge.setFlux(resCap + edge.getFlux());
+                }
+            }
+        }
+
+        //determine residual grid
+        resGrid = residualGrid();
+        resGrid.unweightedShortestPath(st);
+        path = resGrid.getPath(st, ta);
+        destination = *(resGrid.findVertex(ta));
+
+        //update origin
+        origin = *(findVertex(st));
+        //determine current max-flux
+        newFlux = 0;
+        for(Edge<T> edge: origin.adj){
+            newFlux+= edge.getFlux();
+        }
+    }
+
+}
+
+template<class T>
+void Graph<T>::printGraph(){
+    for(auto v: vertexSet){
+        for(Edge<T> edge: v->adj){
+            std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
+            << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
+        }
+    }
+}
 
 #endif /* GRAPH_H_ */
