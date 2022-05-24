@@ -10,6 +10,7 @@
 #include <limits>
 #include <algorithm>
 #include "MutablePriorityQueue.h"
+#include <set>
 
 template <class T> class Edge;
 template <class T> class Graph;
@@ -146,7 +147,7 @@ public:
     Graph<T> residualGrid();
     void zeroFlux();
 
-    void increaseGroupSize(T st, T ta, int inc);
+    int increaseGroupSize(T st, T ta, int inc);
 
     void printGraph();
 };
@@ -483,8 +484,10 @@ void Graph<T>::zeroFlux() {
     }
 }
 
+//returns by how much the flux was increased
+//
 template<class T>
-void Graph<T>::increaseGroupSize(T st, T ta, int inc) {
+int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     Vertex<T> origin = *(findVertex(st));
     std::vector<T> path;
     int resCap = INF;
@@ -539,15 +542,21 @@ void Graph<T>::increaseGroupSize(T st, T ta, int inc) {
             newFlux+= edge.getFlux();
         }
     }
-
+    return newFlux - initialFlux;
 }
 
 template<class T>
 void Graph<T>::printGraph(){
+    std::set<std::pair<int, int>> printed;
     for(auto v: vertexSet){
         for(Edge<T> edge: v->adj){
-            std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
-            << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
+            //if has not been printed yet
+            if(printed.find(std::pair(v->info, edge.dest->info)) == printed.end()){
+                std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
+                << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
+                //add to set
+                printed.insert(std::pair(v->info, edge.dest->info));
+            }
         }
     }
 }

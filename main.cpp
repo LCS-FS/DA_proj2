@@ -21,7 +21,8 @@ int main() {
     }
     cout << "Files loaded\n";
 
-    cout << "Max Flux: " << graph.edmondKarpFlux(1, 6) << "\n";
+
+    cout << "Max Flux. " << graph.edmondKarpFlux(1, 6) << endl;
     graph.printGraph();
 
     return 0;
