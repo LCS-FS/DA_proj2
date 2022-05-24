@@ -146,6 +146,9 @@ public:
     Graph<T> residualGrid();
     void zeroFlux();
 
+    void increaseGroupSize(T st, T ta, int inc);
+
+    void printGraph();
 };
 
 template<class T>
@@ -480,5 +483,73 @@ void Graph<T>::zeroFlux() {
     }
 }
 
+template<class T>
+void Graph<T>::increaseGroupSize(T st, T ta, int inc) {
+    Vertex<T> origin = *(findVertex(st));
+    std::vector<T> path;
+    int resCap = INF;
+    Graph<T> resGrid;
+
+    //get initial flux
+    int initialFlux = 0;
+    for(Edge<T> edge: origin.adj){
+        initialFlux += edge.getFlux();
+    }
+    int newFlux = initialFlux;
+
+    //determine residual grid
+    resGrid = residualGrid();
+    resGrid.unweightedShortestPath(st);
+    path = resGrid.getPath(st, ta);
+    Vertex<T> destination = *(resGrid.findVertex(ta));
+
+    //while there is a path in the Residual Grid
+    while(newFlux - initialFlux < inc){
+
+        //find minimun Cf in path
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> edge: (resGrid.findVertex(path[i]))->adj){
+                //found the edge of the path
+                if(edge.dest->info == resGrid.findVertex(path[i+1])->info){
+                    resCap = std::min(edge.getWeight(), resCap);
+                }
+            }
+        }
+
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> &edge: findVertex(path[i])->adj){
+                //found the edge of the path
+                if(edge.dest->info == findVertex(path[i+1])->info){
+                    edge.setFlux(resCap + edge.getFlux());
+                }
+            }
+        }
+
+        //determine residual grid
+        resGrid = residualGrid();
+        resGrid.unweightedShortestPath(st);
+        path = resGrid.getPath(st, ta);
+        destination = *(resGrid.findVertex(ta));
+
+        //update origin
+        origin = *(findVertex(st));
+        //determine current max-flux
+        newFlux = 0;
+        for(Edge<T> edge: origin.adj){
+            newFlux+= edge.getFlux();
+        }
+    }
+
+}
+
+template<class T>
+void Graph<T>::printGraph(){
+    for(auto v: vertexSet){
+        for(Edge<T> edge: v->adj){
+            std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
+            << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
+        }
+    }
+}
 
 #endif /* GRAPH_H_ */
