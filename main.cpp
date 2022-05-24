@@ -19,7 +19,9 @@ int main() {
         graph.~Graph();
         Graph<int> graph;
     }
-    cout << "Files loaded";
+    cout << "Files loaded\n";
+
+    cout << "Max Flux: " << graph.edmondKarpFlux(1, 6) << "\n";
 
     return 0;
 }
@@ -40,7 +42,7 @@ bool loadFile(string fileName, Graph<int> &graph){
     //get edges and add them to the graph
     while(!stream.eof()){
         stream >> origin >> dest >> cap >> dur;
-        if(!graph.addEdge(origin, dest, dur, cap)) return false;
+        if(!graph.addEdge(origin, dest, dur, cap, 1)) return false;
     }
     return true;
 }
