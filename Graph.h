@@ -151,7 +151,7 @@ public:
     int increaseGroupSize(T st, T ta, int inc);
     void auxTest2_2();
 
-    void topoSort(T st, std::stack<T> &stack);
+    void topoSort(T st, std::stack<Vertex<T>> &stack);
     int longestPath(T st, T ta);
 
     void printGraph();
@@ -586,18 +586,64 @@ void Graph<T>::auxTest2_2(){
     v->adj[1].setFlux(4); //5-6
 }
 
+//to be used after a flux setting algorithm
 template<class T>
 int Graph<T>::longestPath(T st, T ta) {
-    return 0;
+    std::stack<Vertex<T>> stack;
+    //set all as not visited
+    for(Vertex<T>* vertex: vertexSet){
+        vertex->visited = false;
+    }
+    //store topological sort
+    for(Vertex<T>* vertex: vertexSet){
+        if(!(vertex->visited)) topoSort(vertex->info, stack);
+    }
+
+    //set all distances to infinite
+    for(Vertex<T>* vertex: vertexSet){
+        vertex->dist = -INF;
+    }
+    Vertex<T>* origin = findVertex(st);
+    origin->dist = 0;
+
+    Vertex<T>* dest;
+    //process verteses in topological order
+    while(stack.size()>0){
+        Vertex<T> node = stack.top();
+        stack.pop();
+
+        //adjacent
+        if(node.dist != -INF){
+            for(Edge<T> edge : node.adj){
+                if(edge.flux != 0){
+                    dest = edge.dest;
+                    if(dest->dist < node.dist + edge.duration){
+                        dest->dist = node.dist + edge.duration;
+                        dest->path = findVertex(node.info);
+                    }
+                }
+            }
+        }
+    }
+    Vertex<T>* target = findVertex(ta);
+
+    std::vector<T> path = getPath(st, ta);
+    int maxDur = 0;
+    for(int node: path){
+        maxDur += findVertex(node)->dist;
+    }
+    return maxDur;
 }
 
+//to be used after a flux setting algorithm
 template<class T>
-void Graph<T>::topoSort(T st, std::stack<T> &stack) {
+void Graph<T>::topoSort(T st, std::stack<Vertex<T>> &stack) {
     Vertex<T>* origin = findVertex(st);
     origin->visited = true;
     for(Edge<T> edge : origin->adj){
-
+        if(!(edge.dest->visited) && (edge.flux != 0)) topoSort((edge.dest)->info, stack);
     }
+    stack.push(*origin);
 }
 
 #endif /* GRAPH_H_ */
