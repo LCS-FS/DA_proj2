@@ -97,6 +97,7 @@ public:
     Edge(Vertex<T> *d, int duration, int c, int w);
     friend class Graph<T>;
     friend class Vertex<T>;
+    bool operator<(const Edge<T> & edge) const;
 };
 
 template <class T>
@@ -581,6 +582,10 @@ void Graph<T>::auxTest2_2(){
     v = findVertex(5);
     v->adj[0].setFlux(0); //5-4
     v->adj[1].setFlux(4); //5-6
+}
+template<class T>
+bool Edge<T>::operator<(const Edge<T> & edge) const{
+    return capacity < edge.getCapacity();
 }
 
 #endif /* GRAPH_H_ */
