@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "MutablePriorityQueue.h"
 #include <set>
+#include <stack>
 
 template <class T> class Edge;
 template <class T> class Graph;
@@ -148,10 +149,12 @@ public:
     void zeroFlux();
 
     int increaseGroupSize(T st, T ta, int inc);
+    void auxTest2_2();
+
+    void topoSort(T st, std::stack<T> &stack);
+    int longestPath(T st, T ta);
 
     void printGraph();
-
-    void auxTest2_2();
 };
 
 template<class T>
@@ -581,6 +584,20 @@ void Graph<T>::auxTest2_2(){
     v = findVertex(5);
     v->adj[0].setFlux(0); //5-4
     v->adj[1].setFlux(4); //5-6
+}
+
+template<class T>
+int Graph<T>::longestPath(T st, T ta) {
+    return 0;
+}
+
+template<class T>
+void Graph<T>::topoSort(T st, std::stack<T> &stack) {
+    Vertex<T>* origin = findVertex(st);
+    origin->visited = true;
+    for(Edge<T> edge : origin->adj){
+
+    }
 }
 
 #endif /* GRAPH_H_ */
