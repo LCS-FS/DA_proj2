@@ -291,15 +291,15 @@ inline bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, int weight) {
 }
 
 template<class T>
-void Graph<T>::dijkstraShortestPath(const T &origin) {
+void Graph<T>::dijkstraShortestPath(const T &origin) { //uses duration instead of weight
     auto s = initSingleSource(origin);
     MutablePriorityQueue<Vertex<T>> q;
     q.insert(s);
     while( ! q.empty() ) {
         auto v = q.extractMin();
-        for(auto e : v->adj) {
+        for(Edge<T> e : v->adj) {
             auto oldDist = e.dest->dist;
-            if (relax(v, e.dest, e.weight)) {
+            if (relax(v, e.dest, e.duration)) {
                 if (oldDist == INF)
                     q.insert(e.dest);
                 else
