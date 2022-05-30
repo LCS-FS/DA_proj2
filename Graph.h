@@ -31,7 +31,7 @@ class Vertex {
     int queueIndex = 0; 		// required by MutablePriorityQueue
 
     void addEdge(Vertex<T> *dest, int dur, int c, int w);
-
+    int lt, et;
 public:
     Vertex(T in);
     bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
@@ -152,10 +152,12 @@ public:
     int increaseGroupSize(T st, T ta, int inc);
     void auxTest2_2();
 
-    void topoSort(T st, std::stack<Vertex<T>> &stack);
+    void topoSort(T st, std::stack<Vertex<T>*> &stack);
     int longestPath(T st, T ta);
 
     void printGraph();
+
+    void vertexTime(T st, T ta);
 };
 
 template<class T>
@@ -567,25 +569,6 @@ void Graph<T>::printGraph(){
     }
 }
 
-//adds some flux to the graph so we can test 2-2
-//TODO remove this function after testing
-template<class T>
-void Graph<T>::auxTest2_2(){
-    Vertex<T>* v = findVertex(1);
-    v->adj[0].setFlux(4); //1-2
-    v->adj[1].setFlux(2); //1-3
-    v = findVertex(2);
-    v->adj[0].setFlux(12); //2-4
-    v = findVertex(3);
-    v->adj[0].setFlux(2); //3-2
-    v->adj[1].setFlux(4); //3-5
-    v = findVertex(4);
-    v->adj[0].setFlux(4); //4-3
-    v->adj[1].setFlux(2); //4-6
-    v = findVertex(5);
-    v->adj[0].setFlux(0); //5-4
-    v->adj[1].setFlux(4); //5-6
-}
 template<class T>
 bool Edge<T>::operator<(const Edge<T> & edge) const{
     return capacity < edge.getCapacity();
@@ -594,7 +577,8 @@ bool Edge<T>::operator<(const Edge<T> & edge) const{
 //to be used after a flux setting algorithm
 template<class T>
 int Graph<T>::longestPath(T st, T ta) {
-    std::stack<Vertex<T>> stack;
+    int NINF = std::numeric_limits<int>::min();
+    std::stack<Vertex<T>*> stack;
     //set all as not visited
     for(Vertex<T>* vertex: vertexSet){
         vertex->visited = false;
@@ -606,7 +590,7 @@ int Graph<T>::longestPath(T st, T ta) {
 
     //set all distances to infinite
     for(Vertex<T>* vertex: vertexSet){
-        vertex->dist = -INF;
+        vertex->dist = NINF;
     }
     Vertex<T>* origin = findVertex(st);
     origin->dist = 0;
@@ -614,41 +598,74 @@ int Graph<T>::longestPath(T st, T ta) {
     Vertex<T>* dest;
     //process verteses in topological order
     while(stack.size()>0){
-        Vertex<T> node = stack.top();
+        Vertex<T>* node = stack.top();
         stack.pop();
 
         //adjacent
-        if(node.dist != -INF){
-            for(Edge<T> edge : node.adj){
+        if(node->dist != NINF){
+            for(Edge<T> edge : node->adj){
                 if(edge.flux != 0){
                     dest = edge.dest;
-                    if(dest->dist < node.dist + edge.duration){
-                        dest->dist = node.dist + edge.duration;
-                        dest->path = findVertex(node.info);
+                    if(dest->dist < node->dist + edge.duration){
+                        dest->dist = node->dist + edge.duration;
+                        dest->path = findVertex(node->info);
                     }
                 }
             }
         }
     }
     Vertex<T>* target = findVertex(ta);
-
-    std::vector<T> path = getPath(st, ta);
-    int maxDur = 0;
-    for(int node: path){
-        maxDur += findVertex(node)->dist;
-    }
-    return maxDur;
+//
+//    std::vector<T> path = getPath(st, ta);
+//    int maxDur = 0;
+//    for(int node: path){
+//        maxDur += findVertex(node)->dist;
+//    }
+//    return maxDur;
+    return target->dist;
 }
 
 //to be used after a flux setting algorithm
 template<class T>
-void Graph<T>::topoSort(T st, std::stack<Vertex<T>> &stack) {
+void Graph<T>::topoSort(T st, std::stack<Vertex<T>*> &stack) {
     Vertex<T>* origin = findVertex(st);
     origin->visited = true;
     for(Edge<T> edge : origin->adj){
         if(!(edge.dest->visited) && (edge.flux != 0)) topoSort((edge.dest)->info, stack);
     }
-    stack.push(*origin);
+    stack.push(origin);
+}
+
+template<class T>
+void Graph<T>::vertexTime(T st, T ta) {
+    dijkstraShortestPath(st);
+    for(Vertex<T>* v : vertexSet){
+        v->et = v->dist;
+    }
+    longestPath(st, ta);
+    for(Vertex<T>* v : vertexSet){
+        v->lt = v->dist;
+    }
+
+    int maxD = 0;
+    std::vector<T> biggest;
+    for(Vertex<T>* v : vertexSet){
+        if((v->lt) - (v->et) != 0){
+            std::cout << "Vertex: " << v->info << " Waiting: " << (v->lt) - (v->et) << std::endl;
+            if((v->lt) - (v->et) > maxD){
+                maxD = (v->lt) - (v->et);
+                biggest.erase(biggest.begin(), biggest.end());
+                biggest.push_back(v->info);
+            }
+            else if((v->lt) - (v->et) == maxD){
+                biggest.push_back(v->info);
+            }
+        }
+    }
+    std::cout << "Biggest waiting time: " << maxD << '\n';
+    for(auto node : biggest){
+        std::cout << "Node: " << node << '\n';
+    }
 }
 
 #endif /* GRAPH_H_ */

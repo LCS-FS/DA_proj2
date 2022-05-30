@@ -28,8 +28,8 @@ int main() {
 //    increase = graph.increaseGroupSize(1, 6, 10);
 //    graph.printGraph();
 //    printf("increased by %d\n", increase);
-    cout << graph.longestPath(1, 6) << endl;
-
+    graph.vertexTime(1, 6);
+    cout << "done\n";
     return 0;
 }
 
