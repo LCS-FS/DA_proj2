@@ -21,14 +21,15 @@ int main() {
     }
     cout << "Files loaded\n";
 
-//    int increase;
-    graph.auxTest2_2();
-    graph.printGraph();
-    cout << "=================================================" << endl;
+////    int increase;
+//    graph.auxTest2_4();
+//    graph.printGraph();
+//    cout << "=================================================" << endl;
 //    increase = graph.increaseGroupSize(1, 6, 10);
 //    graph.printGraph();
 //    printf("increased by %d\n", increase);
-    graph.vertexTime(1, 6);
+//    graph.vertexTime(1, 8);
+//    cout << graph.longestPath(1, 8);
     cout << "done\n";
     return 0;
 }

@@ -150,7 +150,7 @@ public:
     void zeroFlux();
 
     int increaseGroupSize(T st, T ta, int inc);
-    void auxTest2_2();
+    void auxTest2_4();
 
     void topoSort(T st, std::stack<Vertex<T>*> &stack);
     int longestPath(T st, T ta);
@@ -665,6 +665,15 @@ void Graph<T>::vertexTime(T st, T ta) {
     std::cout << "Biggest waiting time: " << maxD << '\n';
     for(auto node : biggest){
         std::cout << "Node: " << node << '\n';
+    }
+}
+
+template<class T>
+void Graph<T>::auxTest2_4() {
+    for(Vertex<T>* v: vertexSet){
+        for(int i = 0; i < v->adj.size(); i++){
+            v->adj[i].setFlux(4);
+        }
     }
 }
 
