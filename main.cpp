@@ -21,7 +21,7 @@ int main() {
     }
     cout << "Files loaded\n";
 
-////    int increase;
+//   int increase;
 //    graph.auxTest2_4();
 //    graph.printGraph();
 //    cout << "=================================================" << endl;
@@ -31,13 +31,30 @@ int main() {
 //    graph.vertexTime(1, 8);
 //    cout << graph.longestPath(1, 8);
     // cout << "done\n";
-    cout << "Biggest Possible group size: " << graph.firstAlgorithm(1, 6) << '\n';
-    vector<int> path = graph.getPath(1,6);
-    if(path.size() == 0) printf("empty\n");
-    for(auto node: path){
-        printf("%d ->", node);
+//    cout << "Biggest Possible group size: " << graph.firstAlgorithm(1, 6) << '\n';
+//    vector<int> path = graph.getPath(1,5000);
+//    if(path.size() == 0) printf("empty\n");
+//    for(auto node: path){
+//        printf("%d ->", node);
+//    }
+//    graph.printGraph();
+    cout << "bfs\n";
+    graph.unweightedShortestPath(1);
+    for(int node: graph.getPath(1, 6)){
+        cout << node << " ";
     }
-    graph.printGraph();
+    cout << '\n';
+    cout << "maxCap\n";
+    graph.firstAlgorithm(1, 6);
+    for(int node: graph.getPath(1, 6)){
+        cout << node << " ";
+    }
+    cout << '\n';
+    std::vector<vector<int>> vector1 = graph.capacityOrEdges(1, 6);
+    cout << "number of equal paths: " << vector1.size() << endl;
+    for(int node: graph.getPath(1, 6)){
+        cout << node << " ";
+    }
 
     return 0;
 }

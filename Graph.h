@@ -165,6 +165,7 @@ public:
     void printGraph();
 
     void vertexTime(T st, T ta);
+    vector<vector<T>> capacityOrEdges(T st, T ta);
 };
 
 template<class T>
@@ -576,25 +577,6 @@ void Graph<T>::printGraph(){
     }
 }
 
-//adds some flux to the graph so we can test 2-2
-//TODO remove this function after testing
-template<class T>
-void Graph<T>::auxTest2_2(){
-    Vertex<T>* v = findVertex(1);
-    v->adj[0].setFlux(4); //1-2
-    v->adj[1].setFlux(2); //1-3
-    v = findVertex(2);
-    v->adj[0].setFlux(12); //2-4
-    v = findVertex(3);
-    v->adj[0].setFlux(2); //3-2
-    v->adj[1].setFlux(4); //3-5
-    v = findVertex(4);
-    v->adj[0].setFlux(4); //4-3
-    v->adj[1].setFlux(2); //4-6
-    v = findVertex(5);
-    v->adj[0].setFlux(0); //5-4
-    v->adj[1].setFlux(4); //5-6
-}
 
 template<class T>
 int Graph<T>::firstAlgorithm(T start, T end) {
@@ -738,6 +720,47 @@ void Graph<T>::auxTest2_4() {
             v->adj[i].setFlux(4);
         }
     }
+}
+
+template<class T>
+vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
+    vector<T> bfsVec, maxCapVec;
+    vector<vector<T>> res;
+    int bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;
+    unweightedShortestPath(st);
+    bfsVec = getPath(st, ta);
+    bfsEdges = bfsVec.size();
+    for(T node: bfsVec){
+        Vertex<T> * v = findVertex(node);
+        bfsCap = std::min(bfsCap, v->cap);
+    }
+
+    maxCapCap = firstAlgorithm(st, ta);
+    maxCapVec = getPath(st, ta);
+    maxCapEdges = maxCapVec.size();
+    if(bfsEdges == maxCapEdges && bfsCap == maxCapCap){ //equal
+        res.push_back(bfsVec);
+        res.push_back(maxCapVec);
+    }
+    else if(bfsEdges != maxCapEdges){ //diferent edges means bfs has less
+        if(bfsCap == maxCapCap){ //means bfs is better in edges and the same in cap
+            res.push_back(bfsVec);
+        }
+        else{ //diferent cap means bfs is better in edges and maxCap is better in cap
+            res.push_back(bfsVec);
+            res.push_back(maxCapVec);
+        }
+    }
+    else{ //equal edges means equals or maxCap is better
+        if(bfsCap == maxCapCap){ //bfs is better in edges and the same in cap
+            res.push_back(bfsVec);
+            res.push_back(maxCapVec);
+        }
+        else{ //means maxCap has better cap and same edges as bfs so maxcap is better
+            res.push_back(maxCapVec);
+        }
+    }
+    return res;
 }
 
 #endif /* GRAPH_H_ */
