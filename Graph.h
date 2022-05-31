@@ -150,7 +150,7 @@ public:
     void zeroFlux();
 
     int increaseGroupSize(T st, T ta, int inc);
-    void auxTest2_2();
+    void auxTest2_4();
 
     void topoSort(T st, std::stack<Vertex<T>*> &stack);
     int longestPath(T st, T ta);
@@ -722,6 +722,15 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
         groupSize -= resCap;
     }
     return 1;
+}
+
+template<class T>
+void Graph<T>::auxTest2_4() {
+    for(Vertex<T>* v: vertexSet){
+        for(int i = 0; i < v->adj.size(); i++){
+            v->adj[i].setFlux(4);
+        }
+    }
 }
 
 #endif /* GRAPH_H_ */
