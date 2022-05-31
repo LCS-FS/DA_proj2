@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.21.1)
+cmake_minimum_required(VERSION 3.16.3)
 project(proj2)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD)
 
 add_executable(proj2 main.cpp Graph.h MutablePriorityQueue.h)

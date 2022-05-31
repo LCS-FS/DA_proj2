@@ -127,7 +127,7 @@ public:
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-
+    int FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     void setNumberNodes(int numberNodes);
@@ -553,6 +553,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     return newFlux - initialFlux;
 }
 
+/*
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
@@ -568,6 +569,7 @@ void Graph<T>::printGraph(){
         }
     }
 }
+*/
 
 template<class T>
 bool Edge<T>::operator<(const Edge<T> & edge) const{
@@ -666,6 +668,60 @@ void Graph<T>::vertexTime(T st, T ta) {
     for(auto node : biggest){
         std::cout << "Node: " << node << '\n';
     }
+}
+
+template<class T>
+int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
+    Vertex<T> origin(st);
+    std::vector<T> path;
+    int resCap = INF;
+    Graph<T> resGrid;
+
+    zeroFlux();
+
+    resGrid = residualGrid();
+    resGrid.unweightedShortestPath(st);
+    path = resGrid.getPath(st, ta);
+
+    //while there is a path in the Residual Grid
+    while(groupSize != 0){
+        resGrid = residualGrid();
+        resGrid.unweightedShortestPath(st);
+        path = resGrid.getPath(st, ta);
+        if (path.empty()) {
+            return 0;
+        }
+
+        //find minimun Cf in path
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> edge: (resGrid.findVertex(path[i]))->adj){
+                //found the edge of the path
+                if(edge.dest->info == resGrid.findVertex(path[i+1])->info){
+                    resCap = std::min(edge.getWeight(), resCap);
+                }
+            }
+        }
+
+        for(int i = 0; i < path.size() -1; i++){
+            for(Edge<T> &edge: findVertex(path[i])->adj){
+                //found the edge of the path
+                if(edge.dest->info == findVertex(path[i+1])->info){
+                    edge.setFlux(resCap + edge.getFlux());
+                }
+            }
+        }
+
+        if (resCap > groupSize) {
+            resCap = groupSize;
+        }
+        std::cout << resCap << " subjects go through this path: ";
+        for(int i = 0; i < path.size() - 1; i++){
+            std::cout << findVertex(path[i])->info << ", ";
+        }
+        std::cout << "destination!" << std::endl;
+        groupSize -= resCap;
+    }
+    return 1;
 }
 
 #endif /* GRAPH_H_ */

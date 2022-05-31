@@ -21,21 +21,16 @@ int main() {
     }
     cout << "Files loaded\n";
 
-//    int increase;
-    graph.auxTest2_2();
-    graph.printGraph();
+
     cout << "=================================================" << endl;
-//    increase = graph.increaseGroupSize(1, 6, 10);
-//    graph.printGraph();
-//    printf("increased by %d\n", increase);
-    graph.vertexTime(1, 6);
+    graph.FindPathGivenGroupSize(1, 6, 24);
     cout << "done\n";
     return 0;
 }
 
 bool loadFile(string fileName, Graph<int> &graph){
     ifstream stream;
-    stream.open("../Tests/" + fileName, ifstream::in);
+    stream.open("Tests/" + fileName, ifstream::in);
     int nNodes, nEdges, origin, dest, cap, dur;
     //get nodes and edges
     stream >> nNodes >> nEdges;
