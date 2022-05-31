@@ -13,6 +13,7 @@
 #include <set>
 #include <stack>
 
+#include "minHeap.h"
 template <class T> class Edge;
 template <class T> class Graph;
 template <class T> class Vertex;
@@ -32,6 +33,8 @@ class Vertex {
 
     void addEdge(Vertex<T> *dest, int dur, int c, int w);
     int lt, et;
+    int cap;
+
 public:
     Vertex(T in);
     bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
@@ -85,6 +88,7 @@ class Edge {
     int capacity;
     int duration;
     int flux;
+    
 
 public:
     int getWeight() const;
@@ -112,6 +116,7 @@ class Graph {
 private:
     int numberNodes, numberEdges;
     std::vector<Vertex<T> *> vertexSet;    // vertex set
+    std::vector<Vertex<T> *> vertex;
 
     //Fp05
     Vertex<T> * initSingleSource(const T &orig);
@@ -130,6 +135,8 @@ public:
 
     int getNumberNodes() const;
     int getNumberEdges() const;
+    int firstAlgorithm(T start, T end);
+    bool heapComp(const Vertex<T>* v1,const Vertex<T>* v2) const;
     void setNumberNodes(int numberNodes);
     void setNumberEdges(int numberEdges);
 
@@ -567,6 +574,62 @@ void Graph<T>::printGraph(){
             }
         }
     }
+}
+
+//adds some flux to the graph so we can test 2-2
+//TODO remove this function after testing
+template<class T>
+void Graph<T>::auxTest2_2(){
+    Vertex<T>* v = findVertex(1);
+    v->adj[0].setFlux(4); //1-2
+    v->adj[1].setFlux(2); //1-3
+    v = findVertex(2);
+    v->adj[0].setFlux(12); //2-4
+    v = findVertex(3);
+    v->adj[0].setFlux(2); //3-2
+    v->adj[1].setFlux(4); //3-5
+    v = findVertex(4);
+    v->adj[0].setFlux(4); //4-3
+    v->adj[1].setFlux(2); //4-6
+    v = findVertex(5);
+    v->adj[0].setFlux(0); //5-4
+    v->adj[1].setFlux(4); //5-6
+}
+
+template<class T>
+int Graph<T>::firstAlgorithm(T start, T end) {
+    MinHeap<Vertex<T>*, int> heap(numberNodes, nullptr);
+    for(Vertex<T>* v: vertexSet){
+        v->path = nullptr;
+        v->cap = 0;
+        v->visited = true;
+        heap.insert(v, -(v->cap));
+    }
+    Vertex<T> * origin = findVertex(start);
+    origin->cap = INF;
+    heap.decreaseKey(origin, -INF);
+    while(heap.getSize() > 0){
+       Vertex<T>* vec = heap.removeMin();
+
+        //std::pop_heap(heap.begin(), heap.end());
+        for(Edge<T> edge: vec->adj){
+            if(std::min(vec->cap,edge.capacity) > edge.dest->cap){
+                edge.dest->cap = std::min(vec->cap,edge.capacity);
+                edge.dest->path = vec;
+                heap.decreaseKey(edge.dest, -(edge.dest->cap));
+            }
+        }
+    }
+    
+    Vertex<T>* vertex;
+    int mincap = INF;
+    vector<T> path = getPath(start, end);
+    for(T info : path){
+        vertex = findVertex(info);
+        mincap = std::min(mincap, vertex->cap);
+    }
+
+    return mincap;
 }
 
 template<class T>

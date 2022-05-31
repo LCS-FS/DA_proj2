@@ -30,7 +30,15 @@ int main() {
 //    printf("increased by %d\n", increase);
 //    graph.vertexTime(1, 8);
 //    cout << graph.longestPath(1, 8);
-    cout << "done\n";
+    // cout << "done\n";
+    cout << "Biggest Possible group size: " << graph.firstAlgorithm(1, 6) << '\n';
+    vector<int> path = graph.getPath(1,6);
+    if(path.size() == 0) printf("empty\n");
+    for(auto node: path){
+        printf("%d ->", node);
+    }
+    graph.printGraph();
+
     return 0;
 }
 
