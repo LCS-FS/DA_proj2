@@ -1,3 +1,0 @@
-/home/jpdat/Documents/FEUP/2Ano2Semestre/DA/DA_proj2/build/CMakeFiles/rebuild_cache.dir
-/home/jpdat/Documents/FEUP/2Ano2Semestre/DA/DA_proj2/build/CMakeFiles/edit_cache.dir
-/home/jpdat/Documents/FEUP/2Ano2Semestre/DA/DA_proj2/build/CMakeFiles/proj2.dir
