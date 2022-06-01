@@ -13,6 +13,7 @@
 #include <set>
 #include <stack>
 
+#include "minHeap.h"
 template <class T> class Edge;
 template <class T> class Graph;
 template <class T> class Vertex;
@@ -32,6 +33,8 @@ class Vertex {
 
     void addEdge(Vertex<T> *dest, int dur, int c, int w);
     int lt, et;
+    int cap;
+
 public:
     Vertex(T in);
     bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
@@ -85,6 +88,7 @@ class Edge {
     int capacity;
     int duration;
     int flux;
+    
 
 public:
     int getWeight() const;
@@ -112,6 +116,7 @@ class Graph {
 private:
     int numberNodes, numberEdges;
     std::vector<Vertex<T> *> vertexSet;    // vertex set
+    std::vector<Vertex<T> *> vertex;
 
     //Fp05
     Vertex<T> * initSingleSource(const T &orig);
@@ -130,6 +135,8 @@ public:
     int FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
+    int firstAlgorithm(T start, T end);
+    bool heapComp(const Vertex<T>* v1,const Vertex<T>* v2) const;
     void setNumberNodes(int numberNodes);
     void setNumberEdges(int numberEdges);
 
@@ -158,6 +165,7 @@ public:
     void printGraph();
 
     void vertexTime(T st, T ta);
+    vector<vector<T>> capacityOrEdges(T st, T ta);
 };
 
 template<class T>
@@ -515,7 +523,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     Vertex<T> destination = *(resGrid.findVertex(ta));
 
     //while there is a path in the Residual Grid
-    while(newFlux - initialFlux < inc){
+    while((newFlux - initialFlux < inc) && destination.visited){
 
         //find minimun Cf in path
         for(int i = 0; i < path.size() -1; i++){
@@ -550,6 +558,8 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
             newFlux+= edge.getFlux();
         }
     }
+    //if it reaches full flux before increasing enough, it means its impossible to increase by the desired amount
+    if(newFlux - initialFlux < inc) return -1;
     return newFlux - initialFlux;
 }
 
@@ -570,6 +580,43 @@ void Graph<T>::printGraph(){
     }
 }
 */
+
+
+template<class T>
+int Graph<T>::firstAlgorithm(T start, T end) {
+    MinHeap<Vertex<T>*, int> heap(numberNodes, nullptr);
+    for(Vertex<T>* v: vertexSet){
+        v->path = nullptr;
+        v->cap = 0;
+        v->visited = true;
+        heap.insert(v, -(v->cap));
+    }
+    Vertex<T> * origin = findVertex(start);
+    origin->cap = INF;
+    heap.decreaseKey(origin, -INF);
+    while(heap.getSize() > 0){
+       Vertex<T>* vec = heap.removeMin();
+
+        //std::pop_heap(heap.begin(), heap.end());
+        for(Edge<T> edge: vec->adj){
+            if(std::min(vec->cap,edge.capacity) > edge.dest->cap){
+                edge.dest->cap = std::min(vec->cap,edge.capacity);
+                edge.dest->path = vec;
+                heap.decreaseKey(edge.dest, -(edge.dest->cap));
+            }
+        }
+    }
+    
+    Vertex<T>* vertex;
+    int mincap = INF;
+    vector<T> path = getPath(start, end);
+    for(T info : path){
+        vertex = findVertex(info);
+        mincap = std::min(mincap, vertex->cap);
+    }
+
+    return mincap;
+}
 
 template<class T>
 bool Edge<T>::operator<(const Edge<T> & edge) const{
@@ -731,6 +778,47 @@ void Graph<T>::auxTest2_4() {
             v->adj[i].setFlux(4);
         }
     }
+}
+
+template<class T>
+vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
+    vector<T> bfsVec, maxCapVec;
+    vector<vector<T>> res;
+    int bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;
+    unweightedShortestPath(st);
+    bfsVec = getPath(st, ta);
+    bfsEdges = bfsVec.size();
+    for(T node: bfsVec){
+        Vertex<T> * v = findVertex(node);
+        bfsCap = std::min(bfsCap, v->cap);
+    }
+
+    maxCapCap = firstAlgorithm(st, ta);
+    maxCapVec = getPath(st, ta);
+    maxCapEdges = maxCapVec.size();
+    if(bfsEdges == maxCapEdges && bfsCap == maxCapCap){ //equal
+        res.push_back(bfsVec);
+        res.push_back(maxCapVec);
+    }
+    else if(bfsEdges != maxCapEdges){ //diferent edges means bfs has less
+        if(bfsCap == maxCapCap){ //means bfs is better in edges and the same in cap
+            res.push_back(bfsVec);
+        }
+        else{ //diferent cap means bfs is better in edges and maxCap is better in cap
+            res.push_back(bfsVec);
+            res.push_back(maxCapVec);
+        }
+    }
+    else{ //equal edges means equals or maxCap is better
+        if(bfsCap == maxCapCap){ //bfs is better in edges and the same in cap
+            res.push_back(bfsVec);
+            res.push_back(maxCapVec);
+        }
+        else{ //means maxCap has better cap and same edges as bfs so maxcap is better
+            res.push_back(maxCapVec);
+        }
+    }
+    return res;
 }
 
 #endif /* GRAPH_H_ */

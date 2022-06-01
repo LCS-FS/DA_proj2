@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
     "FSharp.suggestGitignore": false
+=======
+    "C_Cpp.errorSquiggles": "Disabled"
+>>>>>>> 63ee7bc282ca8288e3da4734ac3068c2f75a092d
 }
