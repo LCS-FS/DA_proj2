@@ -55,7 +55,6 @@ int main() {
     for(int node: graph.getPath(1, 6)){
         cout << node << " ";
     }
-
     return 0;
 }
 

@@ -2,3 +2,4 @@
 cmake-build-debug/
 checks.json
 main
+build/
