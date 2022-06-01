@@ -21,12 +21,6 @@ int main() {
     }
     cout << "Files loaded\n";
 
-<<<<<<< HEAD
-
-    cout << "=================================================" << endl;
-    graph.FindPathGivenGroupSize(1, 6, 24);
-    cout << "done\n";
-=======
 //   int increase;
 //    graph.auxTest2_4();
 //    graph.printGraph();
@@ -62,7 +56,6 @@ int main() {
         cout << node << " ";
     }
 
->>>>>>> 63ee7bc282ca8288e3da4734ac3068c2f75a092d
     return 0;
 }
 
