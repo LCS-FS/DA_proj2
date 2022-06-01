@@ -523,7 +523,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     Vertex<T> destination = *(resGrid.findVertex(ta));
 
     //while there is a path in the Residual Grid
-    while(newFlux - initialFlux < inc){
+    while((newFlux - initialFlux < inc) && destination.visited){
 
         //find minimun Cf in path
         for(int i = 0; i < path.size() -1; i++){
@@ -558,6 +558,8 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
             newFlux+= edge.getFlux();
         }
     }
+    //if it reaches full flux before increasing enough, it means its impossible to increase by the desired amount
+    if(newFlux - initialFlux < inc) return -1;
     return newFlux - initialFlux;
 }
 
