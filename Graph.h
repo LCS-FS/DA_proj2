@@ -127,6 +127,7 @@ private:
 
 public:
     ~Graph();
+    void printPath(vector<T> path, int n); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
     bool addVertex(const T &in);
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
@@ -761,11 +762,7 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
         if (resCap > groupSize) {
             resCap = groupSize;
         }
-        std::cout << resCap << " subjects go through this path: ";
-        for(int i = 0; i < path.size() - 1; i++){
-            std::cout << findVertex(path[i])->info << ", ";
-        }
-        std::cout << "destination!" << std::endl;
+        printPath(path, resCap);
         groupSize -= resCap;
     }
     return 1;
@@ -821,4 +818,13 @@ vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
     return res;
 }
 
+template<class T>
+void Graph<T>::printPath(vector<T> path, int n)
+ {
+     std::cout << n << " subjects go through this path: ";
+        for(int i = 0; i < path.size() - 1; i++){
+            std::cout << findVertex(path[i])->info << ", ";
+        }
+        std::cout << "destination!" << std::endl;
+ }
 #endif /* GRAPH_H_ */
