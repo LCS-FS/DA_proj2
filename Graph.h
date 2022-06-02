@@ -349,6 +349,11 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
     // TODO implement this
 }
 
+///Determines path based on destination and origin
+///Steps back from destination's path to previous vertex until it reaches the origin vertex
+///\param origin number associated with Origin Vertex
+///\param dest number associated with Destination Vertex
+///@return Vector of numbers associated with Vertexes in path, in order
 template<class T>
 std::vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
     std::vector<T> res;
@@ -417,6 +422,12 @@ void Graph<T>::setNumberEdges(int numberEdges) {
     Graph::numberEdges = numberEdges;
 }
 
+///Algorithm to calculate the maximum size of a group that can travel separately
+///Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow
+///Sets appropriate flux for each edge
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///@return maximum group size for the graph
 template<class T>
 int Graph<T>::edmondKarpFlux(T st, T ta) {
     Vertex<T> origin(st);
@@ -468,7 +479,8 @@ int Graph<T>::edmondKarpFlux(T st, T ta) {
     }
     return maxFlux;
 }
-
+///Creates a residual grid graph based on the current graph
+///@return graph object of the residual grid
 template<class T>
 Graph<T> Graph<T>::residualGrid() {
     Graph<T> residualGrid;
@@ -491,19 +503,23 @@ Graph<T> Graph<T>::residualGrid() {
     }
     return residualGrid;
 }
-
-//sets all fluxes to 0
+///Sets flux of every edge on the graph to zero
 template<class T>
 void Graph<T>::zeroFlux() {
     for(auto v: vertexSet){
-        for(auto edge: v->adj){
-            edge.flux = 0;
+        for(int i = 0; i < v->adj.size(); i++){
+            v->adj[i].setFlux(0);
         }
     }
 }
 
-//returns by how much the flux was increased
-//
+///Algorithm to increase group size based on previous paths
+///Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flux
+///Sets appropriate flux for each edge
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///\param inc amount to increase group size by
+///@return how much the group size was increased by or -1 if it cant be increased by the desired amount
 template<class T>
 int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     Vertex<T> origin = *(findVertex(st));
