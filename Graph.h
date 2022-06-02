@@ -565,10 +565,6 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     return newFlux - initialFlux;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 965e09c2ec849cdd6b128c51bd07863561ac4426
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
