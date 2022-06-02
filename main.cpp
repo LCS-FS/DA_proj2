@@ -25,11 +25,11 @@ int main() {
     /*graph.printPath(graph.FindPathGivenGroupSize(1, 6, 25));*/
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
-    cout << graph.edmondKarpFlux(1, 5000) << endl;
+    cout << graph.edmondKarpFlux(1, 300) << endl;
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    graph.vertexTime(1, 5000);
+    graph.vertexTime(1, 300);
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<std::chrono::microseconds>(stop - start);
