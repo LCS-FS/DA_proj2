@@ -12,13 +12,14 @@
 #include "MutablePriorityQueue.h"
 #include <set>
 #include <stack>
-
 #include "minHeap.h"
+
 template <class T> class Edge;
 template <class T> class Graph;
 template <class T> class Vertex;
 
 #define INF std::numeric_limits<int>::max()
+#define NINF std::numeric_limits<int>::min()
 
 /************************* Vertex  **************************/
 
@@ -457,7 +458,6 @@ int Graph<T>::edmondKarpFlux(T st, T ta) {
         resGrid.unweightedShortestPath(st);
         path = resGrid.getPath(st, ta);
         destination = *(resGrid.findVertex(ta));
-
     }
 
     origin = *(findVertex(st));
@@ -496,7 +496,7 @@ template<class T>
 void Graph<T>::zeroFlux() {
     for(auto v: vertexSet){
         for(auto edge: v->adj){
-            edge.setFlux(0);
+            edge.flux = 0;
         }
     }
 }
@@ -564,7 +564,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     return newFlux - initialFlux;
 }
 
-/*
+
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
@@ -580,7 +580,7 @@ void Graph<T>::printGraph(){
         }
     }
 }
-*/
+
 
 
 template<class T>
@@ -627,7 +627,6 @@ bool Edge<T>::operator<(const Edge<T> & edge) const{
 //to be used after a flux setting algorithm
 template<class T>
 int Graph<T>::longestPath(T st, T ta) {
-    int NINF = std::numeric_limits<int>::min();
     std::stack<Vertex<T>*> stack;
     //set all as not visited
     for(Vertex<T>* vertex: vertexSet){
@@ -665,13 +664,6 @@ int Graph<T>::longestPath(T st, T ta) {
         }
     }
     Vertex<T>* target = findVertex(ta);
-//
-//    std::vector<T> path = getPath(st, ta);
-//    int maxDur = 0;
-//    for(int node: path){
-//        maxDur += findVertex(node)->dist;
-//    }
-//    return maxDur;
     return target->dist;
 }
 
@@ -700,7 +692,7 @@ void Graph<T>::vertexTime(T st, T ta) {
     int maxD = 0;
     std::vector<T> biggest;
     for(Vertex<T>* v : vertexSet){
-        if((v->lt) - (v->et) != 0){
+        if(((v->lt) - (v->et) != 0) && ((v->lt) > NINF) && ((v->et) != INF)){
             std::cout << "Vertex: " << v->info << " Waiting: " << (v->lt) - (v->et) << std::endl;
             if((v->lt) - (v->et) > maxD){
                 maxD = (v->lt) - (v->et);
@@ -725,7 +717,12 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
     int resCap = INF;
     Graph<T> resGrid;
 
-    zeroFlux();
+//    zeroFlux();
+    for(Vertex<T>* v: vertexSet){
+        for(int i = 0; i < v->adj.size(); i++){
+            v->adj[i].setFlux(0);
+        }
+    }
 
     resGrid = residualGrid();
     resGrid.unweightedShortestPath(st);
