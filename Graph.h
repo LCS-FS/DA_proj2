@@ -12,6 +12,7 @@
 #include "MutablePriorityQueue.h"
 #include <set>
 #include <stack>
+#include <map>
 
 #include "minHeap.h"
 template <class T> class Edge;
@@ -127,13 +128,13 @@ private:
 
 public:
     ~Graph();
-    void printPath(vector<T> path, int n); // prints a string meaning n subjects go through path
+    void printPath(std::map<vector<int>, int> printablePath); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
     bool addVertex(const T &in);
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-    int FindPathGivenGroupSize(T st, T ta, int groupSize);
+    std::map<vector<int>, int> FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     int firstAlgorithm(T start, T end);
@@ -564,7 +565,6 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     return newFlux - initialFlux;
 }
 
-/*
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
@@ -580,7 +580,6 @@ void Graph<T>::printGraph(){
         }
     }
 }
-*/
 
 
 template<class T>
@@ -719,11 +718,13 @@ void Graph<T>::vertexTime(T st, T ta) {
 }
 
 template<class T>
-int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
+std::map<vector<int>, int> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
     Vertex<T> origin(st);
     std::vector<T> path;
+    std::vector<int> pathInfo;
     int resCap = INF;
     Graph<T> resGrid;
+    std::map<vector<int>, int> printablePath;
 
     zeroFlux();
 
@@ -737,7 +738,7 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
         resGrid.unweightedShortestPath(st);
         path = resGrid.getPath(st, ta);
         if (path.empty()) {
-            return 0;
+            break;
         }
 
         //find minimun Cf in path
@@ -750,7 +751,7 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
             }
         }
 
-        for(int i = 0; i < path.size() -1; i++){
+        for(int i = 0; i < path.size() - 1; i++){
             for(Edge<T> &edge: findVertex(path[i])->adj){
                 //found the edge of the path
                 if(edge.dest->info == findVertex(path[i+1])->info){
@@ -762,10 +763,23 @@ int Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
         if (resCap > groupSize) {
             resCap = groupSize;
         }
-        printPath(path, resCap);
+
+        for (int i = 0; i < path.size(); i++) {
+            pathInfo.push_back(path[i]);
+        }
+
+        if (printablePath.find(pathInfo) == printablePath.end()) {
+            printablePath.insert(std::pair<vector<int>, int>(pathInfo, resCap));
+        } else {
+            printablePath.find(pathInfo)->second += resCap;
+        }
+
+        pathInfo.erase(pathInfo.begin(), pathInfo.end());
+
         groupSize -= resCap;
     }
-    return 1;
+
+    return printablePath;
 }
 
 template<class T>
@@ -819,12 +833,14 @@ vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
 }
 
 template<class T>
-void Graph<T>::printPath(vector<T> path, int n)
+void Graph<T>::printPath(map<vector<int>, int> printablePath)
  {
-     std::cout << n << " subjects go through this path: ";
-        for(int i = 0; i < path.size() - 1; i++){
-            std::cout << findVertex(path[i])->info << ", ";
-        }
-        std::cout << "destination!" << std::endl;
+     for (auto x : printablePath) {
+         cout << x.second << " subjects go through this path: ";
+         for (auto i : x.first) {
+             cout << i << ", ";
+         }
+         cout << "arrived." << std::endl;
+     }
  }
 #endif /* GRAPH_H_ */
