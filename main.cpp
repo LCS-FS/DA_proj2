@@ -2,6 +2,7 @@
 #include <fstream>
 #include "Graph.h"
 #include <string>
+#include <chrono>
 
 using namespace std;
 bool loadFile(string fileName, Graph<int> &graph); //loads stops and vehicles (nodes and edges) from file to the graph
@@ -21,7 +22,26 @@ int main() {
     }
     cout << "Files loaded\n";
 
+<<<<<<< HEAD
     graph.printPath(graph.FindPathGivenGroupSize(1, 6, 25));
+=======
+
+//    cout << graph.edmondKarpFlux(1, 5000) << endl;
+    cout << graph.edmondKarpFlux(1, 5000) << endl;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    graph.vertexTime(1, 5000);
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    long int time;
+    time = duration.count();
+    cout << endl;
+    cout << time << endl;
+
+//    cout << graph.firstAlgorithm(1, 5000);
+>>>>>>> 965e09c2ec849cdd6b128c51bd07863561ac4426
 
     return 0;
 }
