@@ -22,9 +22,7 @@ int main() {
     }
     cout << "Files loaded\n";
 
-<<<<<<< HEAD
-    graph.printPath(graph.FindPathGivenGroupSize(1, 6, 25));
-=======
+    /*graph.printPath(graph.FindPathGivenGroupSize(1, 6, 25));*/
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
     cout << graph.edmondKarpFlux(1, 5000) << endl;
@@ -41,7 +39,6 @@ int main() {
     cout << time << endl;
 
 //    cout << graph.firstAlgorithm(1, 5000);
->>>>>>> 965e09c2ec849cdd6b128c51bd07863561ac4426
 
     return 0;
 }
