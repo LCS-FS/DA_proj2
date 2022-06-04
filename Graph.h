@@ -583,6 +583,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     if(newFlux - initialFlux < inc) return -1;
     return newFlux - initialFlux;
 }
+
 ///Prints the caracteristics of all edges in the graph
 ///Show origin, destination, flux and capacity
 template<class T>
@@ -591,7 +592,7 @@ void Graph<T>::printGraph(){
     for(auto v: vertexSet){
         for(Edge<T> edge: v->adj){
             //if has not been printed yet
-            if(printed.find(std::pair(v->info, edge.dest->info)) == printed.end()){
+            if(printed.find(std::pair(v->info, edge.dest->info) == printed.end()){
                 std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
                 << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
                 //add to set
