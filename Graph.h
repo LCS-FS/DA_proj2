@@ -1,3 +1,6 @@
+///\file
+/// Graph, Vertex and Edge Classes aswell as the algorithms for each problem
+
 /*
  * Graph.h
  */
@@ -129,13 +132,13 @@ private:
 
 public:
     ~Graph();
-    void printPath(std::map<vector<int>, int> printablePath); // prints a string meaning n subjects go through path
+    void printPath(std::map<vector<T>, T> printablePath); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
     bool addVertex(const T &in);
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-    std::map<vector<int>, int> FindPathGivenGroupSize(T st, T ta, int groupSize);
+    std::map<vector<T>, T> FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     int firstAlgorithm(T start, T end);
@@ -349,6 +352,11 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
     // TODO implement this
 }
 
+///Determines path based on destination and origin
+///Steps back from destination's path to previous vertex until it reaches the origin vertex
+///\param origin number associated with Origin Vertex
+///\param dest number associated with Destination Vertex
+///@return Vector of numbers associated with Vertexes in path, in order
 template<class T>
 std::vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
     std::vector<T> res;
@@ -417,6 +425,12 @@ void Graph<T>::setNumberEdges(int numberEdges) {
     Graph::numberEdges = numberEdges;
 }
 
+///Algorithm to calculate the maximum size of a group that can travel separately
+///Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow
+///Sets appropriate flux for each edge
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///@return maximum group size for the graph
 template<class T>
 int Graph<T>::edmondKarpFlux(T st, T ta) {
     Vertex<T> origin(st);
@@ -468,7 +482,8 @@ int Graph<T>::edmondKarpFlux(T st, T ta) {
     }
     return maxFlux;
 }
-
+///Creates a residual grid graph based on the current graph
+///@return graph object of the residual grid
 template<class T>
 Graph<T> Graph<T>::residualGrid() {
     Graph<T> residualGrid;
@@ -491,19 +506,23 @@ Graph<T> Graph<T>::residualGrid() {
     }
     return residualGrid;
 }
-
-//sets all fluxes to 0
+///Sets flux of every edge on the graph to zero
 template<class T>
 void Graph<T>::zeroFlux() {
     for(auto v: vertexSet){
-        for(auto edge: v->adj){
-            edge.flux = 0;
+        for(int i = 0; i < v->adj.size(); i++){
+            v->adj[i].setFlux(0);
         }
     }
 }
 
-//returns by how much the flux was increased
-//
+///Algorithm to increase group size based on previous paths
+///Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flux
+///Sets appropriate flux for each edge
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///\param inc amount to increase group size by
+///@return how much the group size was increased by or -1 if it cant be increased by the desired amount
 template<class T>
 int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     Vertex<T> origin = *(findVertex(st));
@@ -565,13 +584,15 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
     return newFlux - initialFlux;
 }
 
+///Prints the caracteristics of all edges in the graph
+///Show origin, destination, flux and capacity
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
     for(auto v: vertexSet){
         for(Edge<T> edge: v->adj){
             //if has not been printed yet
-            if(printed.find(std::pair(v->info, edge.dest->info)) == printed.end()){
+            if(printed.find(std::pair(v->info, edge.dest->info) == printed.end()){
                 std::cout << "Source: " << v->info << " Destination: " << edge.dest->info
                 << " Flux: " << edge.getFlux() << " Capacity: " << edge.getCapacity() << std::endl;
                 //add to set
@@ -580,7 +601,12 @@ void Graph<T>::printGraph(){
         }
     }
 }
-
+///Computes the highest capacity path in the graph
+///Works for unseperable groups
+///Based on the algorithm for higest capacity path in the theory slides
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///@returns the minimum capacity, in the highest capacity path in the graph
 template<class T>
 int Graph<T>::firstAlgorithm(T start, T end) {
     MinHeap<Vertex<T>*, int> heap(numberNodes, nullptr);
@@ -622,7 +648,12 @@ bool Edge<T>::operator<(const Edge<T> & edge) const{
     return capacity < edge.getCapacity();
 }
 
-//to be used after a flux setting algorithm
+///Computes the longest path, in duration, between 2 nodes
+///Similar to dijkstra's algorithm for shortest distance paths, using topological sort
+///Should be used after a flux setting algorithm
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///@returns longest duration between ta and st nodes
 template<class T>
 int Graph<T>::longestPath(T st, T ta) {
     std::stack<Vertex<T>*> stack;
@@ -665,7 +696,9 @@ int Graph<T>::longestPath(T st, T ta) {
     return target->dist;
 }
 
-//to be used after a flux setting algorithm
+///Inserts nodes on a stack, in topological order
+///\param st number associated with start vertex
+///\param reference to a stack of pointers of nodes, where the nodes will be inserted in
 template<class T>
 void Graph<T>::topoSort(T st, std::stack<Vertex<T>*> &stack) {
     Vertex<T>* origin = findVertex(st);
@@ -676,6 +709,10 @@ void Graph<T>::topoSort(T st, std::stack<Vertex<T>*> &stack) {
     stack.push(origin);
 }
 
+///Computes the earliest and latest arrival at every node
+///Prints every node where people must wait for other people and how long they wait for
+///Dijkstra's algorithm is used to compute earliest arrival
+///LongestPath algorithm is used to compute latest arrival
 template<class T>
 void Graph<T>::vertexTime(T st, T ta) {
     dijkstraShortestPath(st);
@@ -708,14 +745,21 @@ void Graph<T>::vertexTime(T st, T ta) {
     }
 }
 
+///Algorithm to calculate the paths for a splittable group of a given size
+///Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow
+///Sets appropriate flux for each edge
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///\param groupSize desired group size
+///@return map of the paths the group should take
 template<class T>
-std::map<vector<int>, int> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
+std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
     Vertex<T> origin(st);
     std::vector<T> path;
-    std::vector<int> pathInfo;
+    std::vector<T> pathInfo;
     int resCap = INF;
     Graph<T> resGrid;
-    std::map<vector<int>, int> printablePath;
+    std::map<vector<T>, T> printablePath;
 
 //    zeroFlux();
     for(Vertex<T>* v: vertexSet){
@@ -777,16 +821,11 @@ std::map<vector<int>, int> Graph<T>::FindPathGivenGroupSize(T st, T ta, int grou
 
     return printablePath;
 }
-
-template<class T>
-void Graph<T>::auxTest2_4() {
-    for(Vertex<T>* v: vertexSet){
-        for(int i = 0; i < v->adj.size(); i++){
-            v->adj[i].setFlux(4);
-        }
-    }
-}
-
+///Calculates best paths for a unsplittable group based on capacity and number of nodes
+///If multiple paths aren't better than the others in both capacity and number of nodes, all of them are returned
+///\param st number associated with start vertex
+///\param ta number associated with target vertex
+///@return vector of paths as a vector of nodes T
 template<class T>
 vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
     vector<T> bfsVec, maxCapVec;
@@ -828,8 +867,10 @@ vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
     return res;
 }
 
+///Prints all the paths and how many people go through each of them
+///\param printablePath a map of paths, as a vector of nodes T, and number of people that can go through them
 template<class T>
-void Graph<T>::printPath(map<vector<int>, int> printablePath)
+void Graph<T>::printPath(map<vector<T>, T> printablePath)
  {
      for (auto x : printablePath) {
          cout << x.second << " subjects go through this path: ";

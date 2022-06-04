@@ -4,4 +4,3 @@ project(proj2)
 set(CMAKE_CXX_STANDARD)
 
 add_executable(proj2 main.cpp Graph.h MutablePriorityQueue.h minHeap.h Menu.h Menu.cpp)
-
