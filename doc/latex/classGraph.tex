@@ -1,0 +1,261 @@
+\hypertarget{classGraph}{}\doxysection{Graph$<$ T $>$ Class Template Reference}
+\label{classGraph}\index{Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{print\+Path}} (std\+::map$<$ vector$<$ T $>$, T $>$ printable\+Path)
+\item 
+\mbox{\Hypertarget{classGraph_a8b7b7465fbfd562e2a469f90a437ab75}\label{classGraph_a8b7b7465fbfd562e2a469f90a437ab75}} 
+\mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$ {\bfseries find\+Vertex} (const T \&in) const
+\item 
+\mbox{\Hypertarget{classGraph_a00be284ea2be3b3d0f0d2e493b70245b}\label{classGraph_a00be284ea2be3b3d0f0d2e493b70245b}} 
+bool {\bfseries add\+Vertex} (const T \&in)
+\item 
+\mbox{\Hypertarget{classGraph_a8ce9e10080f6f8e882ae52a60bf26192}\label{classGraph_a8ce9e10080f6f8e882ae52a60bf26192}} 
+bool {\bfseries add\+Edge} (const T \&sourc, const T \&dest, int d, int c, int w)
+\item 
+\mbox{\Hypertarget{classGraph_a0853eac15cdf0f06d63f4b8a7820ec71}\label{classGraph_a0853eac15cdf0f06d63f4b8a7820ec71}} 
+int {\bfseries get\+Num\+Vertex} () const
+\item 
+\mbox{\Hypertarget{classGraph_a41624b03fcb6bd29e4df574a1ec58541}\label{classGraph_a41624b03fcb6bd29e4df574a1ec58541}} 
+std\+::vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$ $>$ {\bfseries get\+Vertex\+Set} () const
+\item 
+std\+::map$<$ vector$<$ int $>$, int $>$ \mbox{\hyperlink{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}{Find\+Path\+Given\+Group\+Size}} (T st, T ta, int group\+Size)
+\item 
+\mbox{\Hypertarget{classGraph_a201f3f5fbf9510184e30712879e33429}\label{classGraph_a201f3f5fbf9510184e30712879e33429}} 
+int {\bfseries get\+Number\+Nodes} () const
+\item 
+\mbox{\Hypertarget{classGraph_ae512eea4bfdf88516712583a6cb009bd}\label{classGraph_ae512eea4bfdf88516712583a6cb009bd}} 
+int {\bfseries get\+Number\+Edges} () const
+\item 
+int \mbox{\hyperlink{classGraph_ada2556157dbf5defa8a30cdc0b996136}{first\+Algorithm}} (T start, T end)
+\item 
+\mbox{\Hypertarget{classGraph_a872df230eb39d51ce5bc9b0ca528c7c0}\label{classGraph_a872df230eb39d51ce5bc9b0ca528c7c0}} 
+bool {\bfseries heap\+Comp} (const \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$v1, const \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$v2) const
+\item 
+\mbox{\Hypertarget{classGraph_a5f471fd8b2b6f0b9df1d9dfad44ecbde}\label{classGraph_a5f471fd8b2b6f0b9df1d9dfad44ecbde}} 
+void {\bfseries set\+Number\+Nodes} (int number\+Nodes)
+\item 
+\mbox{\Hypertarget{classGraph_a13d2221f4ea01d570bcb05455b7413d2}\label{classGraph_a13d2221f4ea01d570bcb05455b7413d2}} 
+void {\bfseries set\+Number\+Edges} (int number\+Edges)
+\item 
+\mbox{\Hypertarget{classGraph_a445a38cf4045797198eae2b818b602de}\label{classGraph_a445a38cf4045797198eae2b818b602de}} 
+void {\bfseries dijkstra\+Shortest\+Path} (const T \&s)
+\item 
+\mbox{\Hypertarget{classGraph_aa033b71894f347b9050e1c547fb48b72}\label{classGraph_aa033b71894f347b9050e1c547fb48b72}} 
+void {\bfseries unweighted\+Shortest\+Path} (const T \&s)
+\item 
+\mbox{\Hypertarget{classGraph_a1d6769b79beaa76f78fd9c9209833bef}\label{classGraph_a1d6769b79beaa76f78fd9c9209833bef}} 
+void {\bfseries bellman\+Ford\+Shortest\+Path} (const T \&s)
+\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{get\+Path}} (const T \&origin, const T \&dest) const
+\item 
+\mbox{\Hypertarget{classGraph_ae5161f4408bf1ead2b29d19d67fb04ee}\label{classGraph_ae5161f4408bf1ead2b29d19d67fb04ee}} 
+void {\bfseries floyd\+Warshall\+Shortest\+Path} ()
+\item 
+\mbox{\Hypertarget{classGraph_ace531664e93db533d1bcaf532b97348e}\label{classGraph_ace531664e93db533d1bcaf532b97348e}} 
+std\+::vector$<$ T $>$ {\bfseries getfloyd\+Warshall\+Path} (const T \&origin, const T \&dest) const
+\item 
+int \mbox{\hyperlink{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}{edmond\+Karp\+Flux}} (T st, T ta)
+\item 
+\mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$ \mbox{\hyperlink{classGraph_aa167310b94b212c2c924f4c68038c7e4}{residual\+Grid}} ()
+\item 
+\mbox{\Hypertarget{classGraph_a5c657f3051db9c08b79239622a495b58}\label{classGraph_a5c657f3051db9c08b79239622a495b58}} 
+void \mbox{\hyperlink{classGraph_a5c657f3051db9c08b79239622a495b58}{zero\+Flux}} ()
+\begin{DoxyCompactList}\small\item\em Sets flux of every edge on the graph to zero. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}{increase\+Group\+Size}} (T st, T ta, int inc)
+\item 
+\mbox{\Hypertarget{classGraph_a25a393ee47d9ff160f1656ef71b890d0}\label{classGraph_a25a393ee47d9ff160f1656ef71b890d0}} 
+void {\bfseries aux\+Test2\+\_\+4} ()
+\item 
+void \mbox{\hyperlink{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}{topo\+Sort}} (T st, std\+::stack$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$ $>$ \&stack)
+\item 
+int \mbox{\hyperlink{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}{longest\+Path}} (T st, T ta)
+\item 
+void \mbox{\hyperlink{classGraph_afd5c29368e4760b0b9a81d4967187775}{print\+Graph}} ()
+\item 
+void \mbox{\hyperlink{classGraph_a2931de4d06954374ee4724b5817133e1}{vertex\+Time}} (T st, T ta)
+\item 
+vector$<$ vector$<$ T $>$ $>$ \mbox{\hyperlink{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}{capacity\+Or\+Edges}} (T st, T ta)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}\label{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!capacityOrEdges@{capacityOrEdges}}
+\index{capacityOrEdges@{capacityOrEdges}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{capacityOrEdges()}{capacityOrEdges()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+vector$<$ vector$<$ T $>$ $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::capacity\+Or\+Edges (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta }\end{DoxyParamCaption})}
+
+Calculates best paths for a unsplittable group based on capacity and number of nodes If multiple paths aren\textquotesingle{}t better than the others in both capacity and number of nodes, all of them are returned 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of paths as a vector of nodes T 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}\label{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!edmondKarpFlux@{edmondKarpFlux}}
+\index{edmondKarpFlux@{edmondKarpFlux}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{edmondKarpFlux()}{edmondKarpFlux()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::edmond\+Karp\+Flux (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta }\end{DoxyParamCaption})}
+
+Algorithm to calculate the maximum size of a group that can travel separately Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow Sets appropriate flux for each edge 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+maximum group size for the graph 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}\label{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!FindPathGivenGroupSize@{FindPathGivenGroupSize}}
+\index{FindPathGivenGroupSize@{FindPathGivenGroupSize}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FindPathGivenGroupSize()}{FindPathGivenGroupSize()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::map$<$ vector$<$ T $>$, T $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::Find\+Path\+Given\+Group\+Size (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta,  }\item[{int}]{group\+Size }\end{DoxyParamCaption})}
+
+Algorithm to calculate the paths for a splittable group of a given size Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow Sets appropriate flux for each edge 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+{\em group\+Size} & desired group size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+map of the paths the group should take 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_ada2556157dbf5defa8a30cdc0b996136}\label{classGraph_ada2556157dbf5defa8a30cdc0b996136}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!firstAlgorithm@{firstAlgorithm}}
+\index{firstAlgorithm@{firstAlgorithm}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{firstAlgorithm()}{firstAlgorithm()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::first\+Algorithm (\begin{DoxyParamCaption}\item[{T}]{start,  }\item[{T}]{end }\end{DoxyParamCaption})}
+
+Computes the highest capacity path in the graph Works for unseperable groups Based on the algorithm for higest capacity path in the theory slides 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the minimum capacity, in the highest capacity path in the graph 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_ad9b10f45166faaa19879fca4e73b6f40}\label{classGraph_ad9b10f45166faaa19879fca4e73b6f40}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!getPath@{getPath}}
+\index{getPath@{getPath}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{getPath()}{getPath()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::get\+Path (\begin{DoxyParamCaption}\item[{const T \&}]{origin,  }\item[{const T \&}]{dest }\end{DoxyParamCaption}) const}
+
+Determines path based on destination and origin Steps back from destination\textquotesingle{}s path to previous vertex until it reaches the origin vertex 
+\begin{DoxyParams}{Parameters}
+{\em origin} & number associated with Origin \mbox{\hyperlink{classVertex}{Vertex}} \\
+\hline
+{\em dest} & number associated with Destination \mbox{\hyperlink{classVertex}{Vertex}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of numbers associated with Vertexes in path, in order 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}\label{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!increaseGroupSize@{increaseGroupSize}}
+\index{increaseGroupSize@{increaseGroupSize}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{increaseGroupSize()}{increaseGroupSize()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::increase\+Group\+Size (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta,  }\item[{int}]{inc }\end{DoxyParamCaption})}
+
+Algorithm to increase group size based on previous paths Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flux Sets appropriate flux for each edge 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+{\em inc} & amount to increase group size by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+how much the group size was increased by or -\/1 if it cant be increased by the desired amount 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}\label{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!longestPath@{longestPath}}
+\index{longestPath@{longestPath}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{longestPath()}{longestPath()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::longest\+Path (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta }\end{DoxyParamCaption})}
+
+Computes the longest path, in duration, between 2 nodes Similar to dijkstra\textquotesingle{}s algorithm for shortest distance paths, using topological sort Should be used after a flux setting algorithm 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em ta} & number associated with target vertex \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+longest duration between ta and st nodes 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_afd5c29368e4760b0b9a81d4967187775}\label{classGraph_afd5c29368e4760b0b9a81d4967187775}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!printGraph@{printGraph}}
+\index{printGraph@{printGraph}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{printGraph()}{printGraph()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::print\+Graph}
+
+Prints the caracteristics of all edges in the graph Show origin, destination, flux and capacity \mbox{\Hypertarget{classGraph_ae667eecd89799c645634c0d78a3e98e6}\label{classGraph_ae667eecd89799c645634c0d78a3e98e6}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!printPath@{printPath}}
+\index{printPath@{printPath}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{printPath()}{printPath()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::print\+Path (\begin{DoxyParamCaption}\item[{std\+::map$<$ vector$<$ T $>$, T $>$}]{printable\+Path }\end{DoxyParamCaption})}
+
+Prints all the paths and how many people go through each of them 
+\begin{DoxyParams}{Parameters}
+{\em printable\+Path} & a map of paths, as a vector of nodes T, and number of people that can go through them \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_aa167310b94b212c2c924f4c68038c7e4}\label{classGraph_aa167310b94b212c2c924f4c68038c7e4}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!residualGrid@{residualGrid}}
+\index{residualGrid@{residualGrid}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{residualGrid()}{residualGrid()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::residual\+Grid}
+
+Creates a residual grid graph based on the current graph \begin{DoxyReturn}{Returns}
+graph object of the residual grid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}\label{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!topoSort@{topoSort}}
+\index{topoSort@{topoSort}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{topoSort()}{topoSort()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::topo\+Sort (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{std\+::stack$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$ $>$ \&}]{stack }\end{DoxyParamCaption})}
+
+Inserts nodes on a stack, in topological order 
+\begin{DoxyParams}{Parameters}
+{\em st} & number associated with start vertex \\
+\hline
+{\em reference} & to a stack of pointers of nodes, where the nodes will be inserted in \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_a2931de4d06954374ee4724b5817133e1}\label{classGraph_a2931de4d06954374ee4724b5817133e1}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!vertexTime@{vertexTime}}
+\index{vertexTime@{vertexTime}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{vertexTime()}{vertexTime()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::vertex\+Time (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta }\end{DoxyParamCaption})}
+
+Computes the earliest and latest arrival at every node Prints every node where people must wait for other people and how long they wait for Dijkstra\textquotesingle{}s algorithm is used to compute earliest arrival Longest\+Path algorithm is used to compute latest arrival 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{Graph_8h}{Graph.\+h}}\end{DoxyCompactItemize}
