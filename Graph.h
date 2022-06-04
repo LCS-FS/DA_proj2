@@ -138,7 +138,7 @@ public:
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-    std::map<vector<int>, int> FindPathGivenGroupSize(T st, T ta, int groupSize);
+    std::map<vector<T>, T> FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     int firstAlgorithm(T start, T end);
