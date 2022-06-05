@@ -76,7 +76,9 @@ public:
         if (intInput(1, 2) == 1) {
             //run 1.1
         } else {
-            //run 1.2
+            vector<int> empty;
+            graph.paretoOptimalGroupSizeAndTransportShift(origin, target);
+
         }
     }
 

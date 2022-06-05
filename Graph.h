@@ -131,7 +131,7 @@ private:
     int findVertexIdx(const T &in) const;
 
 public:
-    vector<vector<T>> paths;
+    map<vector<T>, int> paths;
     ~Graph();
     void printPath(std::map<vector<T>, T> printablePath); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
@@ -147,7 +147,7 @@ public:
     void setNumberNodes(int numberNodes);
     void setNumberEdges(int numberEdges);
     void paretoOptimalGroupSizeAndTransportShift(T origin, T target);
-    int recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap);
+    int recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap, int currentCap);
 
     // Single-source shortest path - Greedy
     void dijkstraShortestPath(const T &s);
@@ -175,6 +175,7 @@ public:
 
     void vertexTime(T st, T ta);
     vector<vector<T>> capacityOrEdges(T st, T ta);
+    map<vector<int>, int> filterPathsByDominance();
 };
 
 template<class T>
@@ -908,30 +909,59 @@ void Graph<T>::paretoOptimalGroupSizeAndTransportShift(T origin, T target) {
     maxCapEdges = maxCapVec.size();
 
     vector<int> empty;
+    pair<vector<int>, int> bfsPath, maxCapPath;
 
-    recursivePathFinderLimited(origin, target, empty, maxCapEdges, bfsCap);
+    bfsPath.first = bfsVec;
+    bfsPath.second = bfsCap;
 
-    paths.push_back(bfsVec);
-    paths.push_back(maxCapVec);
+    maxCapPath.first = maxCapVec;
+    maxCapPath.second = maxCapCap;
 
+    recursivePathFinderLimited(origin, target, empty, maxCapEdges, bfsCap, INF);
+
+    paths.insert(bfsPath);
+    paths.insert(maxCapPath);
+
+    paths = filterPathsByDominance();
 }
 
 template<class T>
-int Graph<T>::recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap) {
+int Graph<T>::recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap, int currentCap) {
     currentPath.push_back(current);
     if (currentPath.size() == maxCapEdges) {
         return 0;
     }
     if (current == target) {
-        paths.push_back(currentPath);
+        pair<vector<int>, int> res;
+        res.first = currentPath;
+        res.second = currentCap;
+        paths.insert(res);
     } else {
         for (auto e : findVertex(current)->adj) {
             if (e.capacity > bfsCap) {
-                recursivePathFinderLimited(e.dest->info, target, currentPath, maxCapEdges, bfsCap);
+                recursivePathFinderLimited(e.dest->info, target, currentPath, maxCapEdges, bfsCap, std::min(e.capacity, currentCap));
             }
         }
     }
     return 0;
+}
+
+template<class T>
+map<vector<int>, int> Graph<T>::filterPathsByDominance() {
+    map<vector<int>, int> filtered;
+    for (auto path : paths) {
+        bool dominated = false;
+        for (auto path2 : paths) {
+            if ((path2.first.size() < path.first.size() && path2.second >= path.second) ||
+                    (path2.second > path.second && path2.first.size() <= path.first.size())) {
+                dominated = true;
+            }
+        }
+        if (!dominated) {
+            filtered.insert(path);
+        }
+    }
+    return filtered;
 }
 
 

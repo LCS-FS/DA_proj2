@@ -23,13 +23,13 @@ int main() {
     }
     cout << "Files loaded\n";
 
-    menu.graph.paretoOptimalGroupSizeAndTransportShift(1, 4);
+    menu.graph.paretoOptimalGroupSizeAndTransportShift(1, 6);
 
     for (auto path : menu.graph.paths) {
-        for (auto i : path) {
+        for (auto i : path.first) {
             cout << i << ", ";
         }
-        cout << endl;
+        cout << "arrived transporting " << path.second << " subjects." << endl;
     }
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
