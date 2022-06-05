@@ -23,7 +23,14 @@ int main() {
     }
     cout << "Files loaded\n";
 
-    menu.runInitial();
+    menu.graph.paretoOptimalGroupSizeAndTransportShift(1, 4);
+
+    for (auto path : menu.graph.paths) {
+        for (auto i : path) {
+            cout << i << ", ";
+        }
+        cout << endl;
+    }
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
 //    cout << graph.edmondKarpFlux(1, 50) << endl;

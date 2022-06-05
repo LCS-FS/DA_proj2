@@ -131,6 +131,7 @@ private:
     int findVertexIdx(const T &in) const;
 
 public:
+    vector<vector<T>> paths;
     ~Graph();
     void printPath(std::map<vector<T>, T> printablePath); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
@@ -145,6 +146,8 @@ public:
     bool heapComp(const Vertex<T>* v1,const Vertex<T>* v2) const;
     void setNumberNodes(int numberNodes);
     void setNumberEdges(int numberEdges);
+    void paretoOptimalGroupSizeAndTransportShift(T origin, T target);
+    int recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap);
 
     // Single-source shortest path - Greedy
     void dijkstraShortestPath(const T &s);
@@ -882,4 +885,54 @@ void Graph<T>::printPath(map<vector<T>, T> printablePath)
          cout << "arrived." << std::endl;
      }
  }
+
+template<class T>
+void Graph<T>::paretoOptimalGroupSizeAndTransportShift(T origin, T target) {
+    vector<T> bfsVec, maxCapVec;
+    vector<vector<T>> res;
+    int bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;
+    unweightedShortestPath(origin);
+    bfsVec = getPath(origin, target);
+    bfsEdges = bfsVec.size();
+    for(int i = 0; i < bfsVec.size() - 1; i++){
+        Vertex<T> * v = findVertex(bfsVec[i]);
+        for (auto e : v->adj) {
+            if (e.dest->info == bfsVec[i+1]) {
+                bfsCap = std::min(bfsCap, e.capacity);
+            }
+        }
+    }
+
+    maxCapCap = firstAlgorithm(origin, target);
+    maxCapVec = getPath(origin, target);
+    maxCapEdges = maxCapVec.size();
+
+    vector<int> empty;
+
+    recursivePathFinderLimited(origin, target, empty, maxCapEdges, bfsCap);
+
+    paths.push_back(bfsVec);
+    paths.push_back(maxCapVec);
+
+}
+
+template<class T>
+int Graph<T>::recursivePathFinderLimited(T current, T target, vector<T> currentPath, int maxCapEdges, int bfsCap) {
+    currentPath.push_back(current);
+    if (currentPath.size() == maxCapEdges) {
+        return 0;
+    }
+    if (current == target) {
+        paths.push_back(currentPath);
+    } else {
+        for (auto e : findVertex(current)->adj) {
+            if (e.capacity > bfsCap) {
+                recursivePathFinderLimited(e.dest->info, target, currentPath, maxCapEdges, bfsCap);
+            }
+        }
+    }
+    return 0;
+}
+
+
 #endif /* GRAPH_H_ */
