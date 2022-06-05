@@ -586,6 +586,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
 
 ///Prints the caracteristics of all edges in the graph
 ///Show origin, destination, flux and capacity
+/*
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
@@ -600,7 +601,7 @@ void Graph<T>::printGraph(){
             }
         }
     }
-}
+}*/
 ///Computes the highest capacity path in the graph
 ///Works for unseperable groups
 ///Based on the algorithm for higest capacity path in the theory slides
@@ -778,6 +779,7 @@ std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSiz
         resGrid.unweightedShortestPath(st);
         path = resGrid.getPath(st, ta);
         if (path.empty()) {
+            cout << "Couldn't find a path for the whole group. The biggest possible group's path goes as follows:\n";
             break;
         }
 

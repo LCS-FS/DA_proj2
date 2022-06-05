@@ -3,40 +3,42 @@
 #include "Graph.h"
 #include <string>
 #include <chrono>
+#include "Menu.h"
 
 using namespace std;
 bool loadFile(string fileName, Graph<int> &graph); //loads stops and vehicles (nodes and edges) from file to the graph
 
 int main() {
-    Graph<int> graph;
+    Menu menu;
     string fileName;
     cout << "Insert Dataset File name:\n";
     cin >> fileName;
 
 
-    while(!loadFile(fileName, graph)){
+    while(!loadFile(fileName, menu.graph)){
         cout << "Error Loading File. Try again:\n";
         cin >> fileName;
-        graph.~Graph();
-        Graph<int> graph;
+        menu.~Menu();
+        menu = Menu();
     }
     cout << "Files loaded\n";
 
-    /*graph.printPath(graph.FindPathGivenGroupSize(1, 6, 25));*/
+    menu.runInitial();
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
-    cout << graph.edmondKarpFlux(1, 50) << endl;
+//    cout << graph.edmondKarpFlux(1, 50) << endl;
 
-    auto start = std::chrono::high_resolution_clock::now();
+//    auto start = std::chrono::high_resolution_clock::now();
 
 //    graph.vertexTime(1, 300);
-
+/*
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<std::chrono::microseconds>(stop - start);
     long int time;
     time = duration.count();
     cout << endl;
     cout << time << endl;
+    */
 
 //    cout << graph.firstAlgorithm(1, 5000);
 
