@@ -1,0 +1,202 @@
+\hypertarget{Menu_8h_source}{}\doxysection{Menu.\+h}
+\mbox{\hyperlink{Menu_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#ifndef PROJ2\_MENU\_H}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#define PROJ2\_MENU\_H}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{Graph_8h}{Graph.h}}"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{classMenu}{Menu}} \{}
+\DoxyCodeLine{12 \textcolor{keyword}{public}:}
+\DoxyCodeLine{13     \mbox{\hyperlink{classGraph}{Graph<int>}} graph;}
+\DoxyCodeLine{14     \textcolor{keywordtype}{int} origin = 0;}
+\DoxyCodeLine{15     \textcolor{keywordtype}{int} target = 0;}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{20     \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(\textcolor{keywordtype}{int} min, \textcolor{keywordtype}{int} max) \{}
+\DoxyCodeLine{21         \textcolor{keywordtype}{string} input;}
+\DoxyCodeLine{22         \textcolor{keywordtype}{int} output;}
+\DoxyCodeLine{23         \textcolor{keywordtype}{bool} valid = \textcolor{keyword}{true};}
+\DoxyCodeLine{24         \textcolor{keywordflow}{do} \{}
+\DoxyCodeLine{25             \textcolor{keywordflow}{if} (!valid) \{}
+\DoxyCodeLine{26                 cout << \textcolor{stringliteral}{"{}I can't understand your input, could you please try again?\(\backslash\)n"{}};}
+\DoxyCodeLine{27             \}}
+\DoxyCodeLine{28             valid = \textcolor{keyword}{true};}
+\DoxyCodeLine{29             cin >> input;}
+\DoxyCodeLine{30             \textcolor{keywordflow}{try} \{}
+\DoxyCodeLine{31                 output = stoi(input);}
+\DoxyCodeLine{32             \} \textcolor{keywordflow}{catch} (invalid\_argument \&e) \{}
+\DoxyCodeLine{33                 valid = \textcolor{keyword}{false};}
+\DoxyCodeLine{34             \}}
+\DoxyCodeLine{35             \textcolor{keywordflow}{if} (output < min || output > max) \{}
+\DoxyCodeLine{36                 valid = \textcolor{keyword}{false};}
+\DoxyCodeLine{37             \}}
+\DoxyCodeLine{38         \} \textcolor{keywordflow}{while} (!valid);}
+\DoxyCodeLine{39         \textcolor{keywordflow}{return} output;}
+\DoxyCodeLine{40     \}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} \mbox{\hyperlink{classMenu_a0468e80f26dfd5d9d5f6d9fa68d91cd3}{runSelectOrigin}}() \{}
+\DoxyCodeLine{44         cout << \textcolor{stringliteral}{"{}Welcome to the Path Finder! Your algorithmic interface to find best paths through"{}}}
+\DoxyCodeLine{45                 \textcolor{stringliteral}{"{} Graph data structures :)\(\backslash\)n"{}}}
+\DoxyCodeLine{46                 \textcolor{stringliteral}{"{}Now, where are we starting? (Input the integer representing the node)\(\backslash\)n"{}};}
+\DoxyCodeLine{47         \textcolor{keywordtype}{bool} repeat;}
+\DoxyCodeLine{48         \textcolor{keywordflow}{do} \{}
+\DoxyCodeLine{49             repeat = \textcolor{keyword}{false};}
+\DoxyCodeLine{50             origin = \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(1, INT32\_MAX);}
+\DoxyCodeLine{51             \textcolor{keywordflow}{if} (graph.findVertex(origin) == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{52                 cout << \textcolor{stringliteral}{"{}Sorry, couldn't find that vertex. Can you try again?\(\backslash\)n"{}};}
+\DoxyCodeLine{53                 repeat = \textcolor{keyword}{true};}
+\DoxyCodeLine{54             \}}
+\DoxyCodeLine{55         \} \textcolor{keywordflow}{while} (repeat);}
+\DoxyCodeLine{56         \mbox{\hyperlink{classMenu_a57b5c04ff3cfab798e2dfd46209128a5}{runSelectTarget}}();}
+\DoxyCodeLine{57     \}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{void} \mbox{\hyperlink{classMenu_a57b5c04ff3cfab798e2dfd46209128a5}{runSelectTarget}}() \{}
+\DoxyCodeLine{63         cout << \textcolor{stringliteral}{"{}Great, now let's select our target destination. (Input the integer representing the node)\(\backslash\)n"{}};}
+\DoxyCodeLine{64         \textcolor{keywordtype}{bool} repeat;}
+\DoxyCodeLine{65         \textcolor{keywordflow}{do} \{}
+\DoxyCodeLine{66             repeat = \textcolor{keyword}{false};}
+\DoxyCodeLine{67             target = \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(1, INT32\_MAX);}
+\DoxyCodeLine{68             \textcolor{keywordflow}{if} (graph.findVertex(target) == \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{69                 cout << \textcolor{stringliteral}{"{}Sorry, couldn't find that vertex. Can you try again?\(\backslash\)n"{}};}
+\DoxyCodeLine{70                 repeat = \textcolor{keyword}{true};}
+\DoxyCodeLine{71             \}}
+\DoxyCodeLine{72         \} \textcolor{keywordflow}{while} (repeat);}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74         \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}{runInitial}}());}
+\DoxyCodeLine{75     \}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{79     \textcolor{keywordtype}{int} \mbox{\hyperlink{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}{runInitial}}() \{}
+\DoxyCodeLine{80         cout << \textcolor{stringliteral}{"{}Ok, now an important matter for us to analyse the best path:\(\backslash\)n"{}}}
+\DoxyCodeLine{81                 \textcolor{stringliteral}{"{}Can the group being transported be separated?\(\backslash\)n"{}}}
+\DoxyCodeLine{82                 \textcolor{stringliteral}{"{}1 -\/ Yes\(\backslash\)n"{}}}
+\DoxyCodeLine{83                 \textcolor{stringliteral}{"{}2 -\/ No\(\backslash\)n"{}}}
+\DoxyCodeLine{84                 \textcolor{stringliteral}{"{}3 -\/ Re-\/select origin and target\(\backslash\)n"{}}}
+\DoxyCodeLine{85                 \textcolor{stringliteral}{"{}0 -\/ Exit\(\backslash\)n"{}};}
+\DoxyCodeLine{86         \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(0, 3)) \{}
+\DoxyCodeLine{87             \textcolor{keywordflow}{case} 1:}
+\DoxyCodeLine{88                 \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a11fd0dbd05282fd15f34deffabc4f470}{runSecond}}());}
+\DoxyCodeLine{89                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{90             \textcolor{keywordflow}{case} 2:}
+\DoxyCodeLine{91                 \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a27090380b461c66932dc86196eab6c83}{runFirst}}());}
+\DoxyCodeLine{92                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{93             \textcolor{keywordflow}{case} 3:}
+\DoxyCodeLine{94                 \mbox{\hyperlink{classMenu_a0468e80f26dfd5d9d5f6d9fa68d91cd3}{runSelectOrigin}}();}
+\DoxyCodeLine{95                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{96             \textcolor{keywordflow}{case} 0:}
+\DoxyCodeLine{97                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{98         \}}
+\DoxyCodeLine{99         \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{100     \}}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{104     \textcolor{keywordtype}{int} \mbox{\hyperlink{classMenu_a27090380b461c66932dc86196eab6c83}{runFirst}}() \{}
+\DoxyCodeLine{105         graph.paths.clear();}
+\DoxyCodeLine{106         cout << \textcolor{stringliteral}{"{}Ok! Now that we know that groups can't be separated, "{}}}
+\DoxyCodeLine{107                 \textcolor{stringliteral}{"{}tell me what we want to find.\(\backslash\)n"{}}}
+\DoxyCodeLine{108                 \textcolor{stringliteral}{"{}1 -\/ The biggest possible group to go from origin to destination\(\backslash\)n"{}}}
+\DoxyCodeLine{109                 \textcolor{stringliteral}{"{}2 -\/ The best solutions in terms of group dimension and transporting shift count\(\backslash\)n"{}}}
+\DoxyCodeLine{110                 \textcolor{stringliteral}{"{}3 -\/ Return\(\backslash\)n"{}}}
+\DoxyCodeLine{111                 \textcolor{stringliteral}{"{}0 -\/ Exit\(\backslash\)n"{}};}
+\DoxyCodeLine{112         pair<vector<int>, \textcolor{keywordtype}{int}> res;}
+\DoxyCodeLine{113         vector<int> empty;}
+\DoxyCodeLine{114         \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(0, 3)) \{}
+\DoxyCodeLine{115             \textcolor{keywordflow}{case} 1:}
+\DoxyCodeLine{116                 res.second = graph.\mbox{\hyperlink{classGraph_ada2556157dbf5defa8a30cdc0b996136}{firstAlgorithm}}(origin, target);}
+\DoxyCodeLine{117                 res.first = graph.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(origin, target);}
+\DoxyCodeLine{118                 graph.paths.insert(res);}
+\DoxyCodeLine{119                 graph.\mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(graph.paths);}
+\DoxyCodeLine{120                 cout << endl;}
+\DoxyCodeLine{121                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{122             \textcolor{keywordflow}{case} 2:}
+\DoxyCodeLine{123                 graph.\mbox{\hyperlink{classGraph_a653077e6fdcea071088335aa4bc58a8c}{paretoOptimalGroupSizeAndTransportShift}}(origin, target);}
+\DoxyCodeLine{124                 \textcolor{keywordflow}{if} (graph.paths.size() > 1) \{}
+\DoxyCodeLine{125                     cout << \textcolor{stringliteral}{"{}Seems like we've found more than one pareto optimal solution. They go as follows:\(\backslash\)n"{}};}
+\DoxyCodeLine{126                 \}}
+\DoxyCodeLine{127                 graph.\mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(graph.paths);}
+\DoxyCodeLine{128                 cout << endl;}
+\DoxyCodeLine{129                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{130             \textcolor{keywordflow}{case} 3:}
+\DoxyCodeLine{131                 \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}{runInitial}}());}
+\DoxyCodeLine{132                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{133             \textcolor{keywordflow}{case} 0:}
+\DoxyCodeLine{134                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{135         \}}
+\DoxyCodeLine{136         \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{137     \}}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{141     \textcolor{keywordtype}{int} \mbox{\hyperlink{classMenu_a11fd0dbd05282fd15f34deffabc4f470}{runSecond}}() \{}
+\DoxyCodeLine{142         graph.paths.clear();}
+\DoxyCodeLine{143         \textcolor{keywordtype}{int} groupSize;}
+\DoxyCodeLine{144         cout << \textcolor{stringliteral}{"{}Ok! Now that we know that groups can be separated, "{}}}
+\DoxyCodeLine{145                 \textcolor{stringliteral}{"{}tell me what to find.\(\backslash\)n"{}}}
+\DoxyCodeLine{146                 \textcolor{stringliteral}{"{}1 -\/ Find a path to a group, given it's dimension (2.1)\(\backslash\)n"{}}}
+\DoxyCodeLine{147                 \textcolor{stringliteral}{"{}2 -\/ Find the biggest possible group dimension and it's path (2.3)\(\backslash\)n"{}}}
+\DoxyCodeLine{148                 \textcolor{stringliteral}{"{}3 -\/ Return\(\backslash\)n"{}}}
+\DoxyCodeLine{149                 \textcolor{stringliteral}{"{}0 -\/ Exit\(\backslash\)n"{}};}
+\DoxyCodeLine{150         \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(0, 3)) \{}
+\DoxyCodeLine{151             \textcolor{keywordflow}{case} 1:}
+\DoxyCodeLine{152                 cout << \textcolor{stringliteral}{"{}For this scenario, it's important to know the group size.\(\backslash\)n"{}}}
+\DoxyCodeLine{153                         \textcolor{stringliteral}{"{}Can you tell me what is it?\(\backslash\)n"{}};}
+\DoxyCodeLine{154                 groupSize = \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(1, INT32\_MAX);}
+\DoxyCodeLine{155                 graph.\mbox{\hyperlink{classGraph_a740b9faf9f19dd485602f67054154514}{FindPathGivenGroupSize}}(origin, target, groupSize);}
+\DoxyCodeLine{156                 graph.\mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(graph.paths);}
+\DoxyCodeLine{157                 cout << endl;}
+\DoxyCodeLine{158                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{159             \textcolor{keywordflow}{case} 2:}
+\DoxyCodeLine{160                 graph.\mbox{\hyperlink{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}{edmondKarpFlux}}(origin, target);}
+\DoxyCodeLine{161                 graph.\mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(graph.paths);}
+\DoxyCodeLine{162                 cout << endl;}
+\DoxyCodeLine{163                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{164             \textcolor{keywordflow}{case} 3:}
+\DoxyCodeLine{165                 \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}{runInitial}}());}
+\DoxyCodeLine{166                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{167             \textcolor{keywordflow}{case} 0:}
+\DoxyCodeLine{168                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{169             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{170                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{171         \}}
+\DoxyCodeLine{172         \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_aa5498c42014d64f1016a0d700d653f77}{runAfterSecond}}());}
+\DoxyCodeLine{173         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{174     \}}
+\DoxyCodeLine{175 }
+\DoxyCodeLine{178     \textcolor{keywordtype}{int} \mbox{\hyperlink{classMenu_aa5498c42014d64f1016a0d700d653f77}{runAfterSecond}}() \{}
+\DoxyCodeLine{179         \textcolor{keywordtype}{int} increase;}
+\DoxyCodeLine{180         cout << \textcolor{stringliteral}{"{}Ok, now by the end of the last algorithm, we can work some more options, if you wish.\(\backslash\)n"{}};}
+\DoxyCodeLine{181         cout << \textcolor{stringliteral}{"{}1 -\/ Correct a pathing due to an increase of a given group size (2.2)\(\backslash\)n"{}}}
+\DoxyCodeLine{182                 \textcolor{stringliteral}{"{}2 -\/ Tell the soonest possible time the group would reunite in destination (2.4)\(\backslash\)n"{}}}
+\DoxyCodeLine{183                 \textcolor{stringliteral}{"{}3 -\/ Assuming everybody leaves from the same place and time, what would "{}}}
+\DoxyCodeLine{184                 \textcolor{stringliteral}{"{}be the greatest waiting time possible (2.5)\(\backslash\)n"{}}}
+\DoxyCodeLine{185                 \textcolor{stringliteral}{"{}4 -\/ Return\(\backslash\)n"{}}}
+\DoxyCodeLine{186                 \textcolor{stringliteral}{"{}0 -\/ Exit\(\backslash\)n"{}};}
+\DoxyCodeLine{187         \textcolor{keywordflow}{switch} (\mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(0, 5)) \{}
+\DoxyCodeLine{188             \textcolor{keywordflow}{case} 1:}
+\DoxyCodeLine{189                 cout << \textcolor{stringliteral}{"{}And how much are you planning to increase the group size by?\(\backslash\)n"{}};}
+\DoxyCodeLine{190                 increase = \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{intInput}}(1, INF);}
+\DoxyCodeLine{191                 graph.\mbox{\hyperlink{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}{increaseGroupSize}}(origin, target, increase);}
+\DoxyCodeLine{192                 graph.\mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(graph.paths);}
+\DoxyCodeLine{193                 cout << endl;}
+\DoxyCodeLine{194                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{195             \textcolor{keywordflow}{case} 2:}
+\DoxyCodeLine{196                 cout << \textcolor{stringliteral}{"{}The soonest reunion would be in "{}} << graph.\mbox{\hyperlink{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}{longestPath}}(origin, target) << \textcolor{stringliteral}{"{} minutes.\(\backslash\)n"{}};}
+\DoxyCodeLine{197                 cout << endl;}
+\DoxyCodeLine{198                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{199             \textcolor{keywordflow}{case} 3:}
+\DoxyCodeLine{200                 graph.\mbox{\hyperlink{classGraph_a2931de4d06954374ee4724b5817133e1}{vertexTime}}(origin, target);}
+\DoxyCodeLine{201                 cout << endl;}
+\DoxyCodeLine{202                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{203             \textcolor{keywordflow}{case} 4:}
+\DoxyCodeLine{204                 \textcolor{keywordflow}{while} (\mbox{\hyperlink{classMenu_a11fd0dbd05282fd15f34deffabc4f470}{runSecond}}());}
+\DoxyCodeLine{205                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{206             \textcolor{keywordflow}{case} 0:}
+\DoxyCodeLine{207                 \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{208         \}}
+\DoxyCodeLine{209         \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{210     \}}
+\DoxyCodeLine{211 \};}
+\DoxyCodeLine{212 }
+\DoxyCodeLine{213 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//PROJ2\_MENU\_H}}
+
+\end{DoxyCode}

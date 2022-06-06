@@ -1,0 +1,49 @@
+\hypertarget{Graph_8h}{}\doxysection{Graph.\+h File Reference}
+\label{Graph_8h}\index{Graph.h@{Graph.h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include \char`\"{}Mutable\+Priority\+Queue.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$set$>$}\newline
+{\ttfamily \#include $<$stack$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include \char`\"{}min\+Heap.\+h\char`\"{}}\newline
+Include dependency graph for Graph.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{Graph_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+% FIG 0
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classVertex}{Vertex$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classEdge}{Edge$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classGraph}{Graph$<$ T $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Graph_8h_a12c2040f25d8e3a7b9e1c2024c618cb6}\label{Graph_8h_a12c2040f25d8e3a7b9e1c2024c618cb6}} 
+\#define {\bfseries INF}~std\+::numeric\+\_\+limits$<$int$>$\+::max()
+\item 
+\mbox{\Hypertarget{Graph_8h_acc3787a58f7365d73fcf50a555ade0fe}\label{Graph_8h_acc3787a58f7365d73fcf50a555ade0fe}} 
+\#define {\bfseries NINF}~std\+::numeric\+\_\+limits$<$int$>$\+::min()
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Graph_8h_a3ceffa73ea5093a2b82e7c2174861828}\label{Graph_8h_a3ceffa73ea5093a2b82e7c2174861828}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries delete\+Matrix} (T $\ast$$\ast$m, int n)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classGraph}{Graph}}, \mbox{\hyperlink{classVertex}{Vertex}} and \mbox{\hyperlink{classEdge}{Edge}} Classes as well as the algorithms for each problem 

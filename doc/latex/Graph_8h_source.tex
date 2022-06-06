@@ -1,0 +1,942 @@
+\hypertarget{Graph_8h_source}{}\doxysection{Graph.\+h}
+\mbox{\hyperlink{Graph_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Graph.h}}
+\DoxyCodeLine{6 \textcolor{comment}{ */}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#ifndef GRAPH\_H\_}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#define GRAPH\_H\_}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <queue>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <limits>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}MutablePriorityQueue.h"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <set>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <stack>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}minHeap.h"{}}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{template} <\textcolor{keyword}{class} T> \textcolor{keyword}{class }\mbox{\hyperlink{classEdge}{Edge}};}
+\DoxyCodeLine{22 \textcolor{keyword}{template} <\textcolor{keyword}{class} T> \textcolor{keyword}{class }\mbox{\hyperlink{classGraph}{Graph}};}
+\DoxyCodeLine{23 \textcolor{keyword}{template} <\textcolor{keyword}{class} T> \textcolor{keyword}{class }\mbox{\hyperlink{classVertex}{Vertex}};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define INF std::numeric\_limits<int>::max()}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define NINF std::numeric\_limits<int>::min()}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{comment}{/************************* Vertex  **************************/}}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{31 \textcolor{keyword}{class }\mbox{\hyperlink{classVertex}{Vertex}} \{}
+\DoxyCodeLine{32     T info;                \textcolor{comment}{// contents}}
+\DoxyCodeLine{33     std::vector<Edge<T> > adj;  \textcolor{comment}{// outgoing edges}}
+\DoxyCodeLine{34     \textcolor{keywordtype}{bool} visited;          \textcolor{comment}{// auxiliary field}}
+\DoxyCodeLine{35     \textcolor{keywordtype}{int} dist = 0;}
+\DoxyCodeLine{36     \mbox{\hyperlink{classVertex}{Vertex<T>}} *path = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{37     \textcolor{keywordtype}{int} queueIndex = 0;         \textcolor{comment}{// required by MutablePriorityQueue}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39     \textcolor{keywordtype}{void} addEdge(\mbox{\hyperlink{classVertex}{Vertex<T>}} *dest, \textcolor{keywordtype}{int} dur, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w);}
+\DoxyCodeLine{40     \textcolor{keywordtype}{int} lt, et;}
+\DoxyCodeLine{41     \textcolor{keywordtype}{int} cap;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43 \textcolor{keyword}{public}:}
+\DoxyCodeLine{44     \mbox{\hyperlink{classVertex}{Vertex}}(T in);}
+\DoxyCodeLine{45     \textcolor{keywordtype}{bool} operator<(\mbox{\hyperlink{classVertex}{Vertex<T>}} \& vertex) \textcolor{keyword}{const}; \textcolor{comment}{// // required by MutablePriorityQueue}}
+\DoxyCodeLine{46     T getInfo() \textcolor{keyword}{const};}
+\DoxyCodeLine{47     \textcolor{keywordtype}{int} getDist() \textcolor{keyword}{const};}
+\DoxyCodeLine{48     \mbox{\hyperlink{classVertex}{Vertex}} *getPath() \textcolor{keyword}{const};}
+\DoxyCodeLine{49     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{classGraph}{Graph}}<T>;}
+\DoxyCodeLine{50     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{classMutablePriorityQueue}{MutablePriorityQueue}}<\mbox{\hyperlink{classVertex}{Vertex}}<T>>;}
+\DoxyCodeLine{51 \};}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{55 \mbox{\hyperlink{classVertex}{Vertex<T>::Vertex}}(T in): info(in) \{\}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{/*}}
+\DoxyCodeLine{58 \textcolor{comment}{ * Auxiliary function to add an outgoing edge to a vertex (this),}}
+\DoxyCodeLine{59 \textcolor{comment}{ * with a given destination vertex (d) and edge weight (w).}}
+\DoxyCodeLine{60 \textcolor{comment}{ */}}
+\DoxyCodeLine{61 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{62 \textcolor{keywordtype}{void} \mbox{\hyperlink{classVertex}{Vertex<T>::addEdge}}(\mbox{\hyperlink{classVertex}{Vertex<T>}} *d, \textcolor{keywordtype}{int} dur, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w) \{}
+\DoxyCodeLine{63     adj.push\_back(\mbox{\hyperlink{classEdge}{Edge<T>}}(d, dur, c, w));}
+\DoxyCodeLine{64 \}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{67 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classVertex}{Vertex<T>::operator<}}(\mbox{\hyperlink{classVertex}{Vertex<T>}} \& vertex)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{68     \textcolor{keywordflow}{return} this-\/>dist < vertex.dist;}
+\DoxyCodeLine{69 \}}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{72 T \mbox{\hyperlink{classVertex}{Vertex<T>::getInfo}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{73     \textcolor{keywordflow}{return} this-\/>info;}
+\DoxyCodeLine{74 \}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{77 \textcolor{keywordtype}{int} \mbox{\hyperlink{classVertex}{Vertex<T>::getDist}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{78     \textcolor{keywordflow}{return} this-\/>dist;}
+\DoxyCodeLine{79 \}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{82 \mbox{\hyperlink{classVertex}{Vertex<T>}} *\mbox{\hyperlink{classVertex}{Vertex<T>::getPath}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{83     \textcolor{keywordflow}{return} this-\/>path;}
+\DoxyCodeLine{84 \}}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86 \textcolor{comment}{/********************** Edge  ****************************/}}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{89 \textcolor{keyword}{class }\mbox{\hyperlink{classEdge}{Edge}} \{}
+\DoxyCodeLine{90     \mbox{\hyperlink{classVertex}{Vertex<T>}} * dest;      \textcolor{comment}{// destination vertex}}
+\DoxyCodeLine{91     \textcolor{keywordtype}{int} weight;}
+\DoxyCodeLine{92     \textcolor{comment}{// edge weight -\/> residual capacity}}
+\DoxyCodeLine{93     \textcolor{keywordtype}{int} capacity;}
+\DoxyCodeLine{94     \textcolor{keywordtype}{int} duration;}
+\DoxyCodeLine{95     \textcolor{keywordtype}{int} flux;}
+\DoxyCodeLine{96     }
+\DoxyCodeLine{97 }
+\DoxyCodeLine{98 \textcolor{keyword}{public}:}
+\DoxyCodeLine{99     \textcolor{keywordtype}{int} getWeight() \textcolor{keyword}{const};}
+\DoxyCodeLine{100     \textcolor{keywordtype}{void} setWeight(\textcolor{keywordtype}{int} weight);}
+\DoxyCodeLine{101     \textcolor{keywordtype}{int} getCapacity() \textcolor{keyword}{const};}
+\DoxyCodeLine{102     \textcolor{keywordtype}{void} setCapacity(\textcolor{keywordtype}{int} capacity);}
+\DoxyCodeLine{103     \textcolor{keywordtype}{int} getFlux() \textcolor{keyword}{const};}
+\DoxyCodeLine{104     \textcolor{keywordtype}{void} setFlux(\textcolor{keywordtype}{int} flux);}
+\DoxyCodeLine{105     \textcolor{keywordtype}{int} getDuration() \textcolor{keyword}{const};}
+\DoxyCodeLine{106     \textcolor{keywordtype}{void} setDuration(\textcolor{keywordtype}{int} duration);}
+\DoxyCodeLine{107     \mbox{\hyperlink{classEdge}{Edge}}(\mbox{\hyperlink{classVertex}{Vertex<T>}} *d, \textcolor{keywordtype}{int} duration, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w);}
+\DoxyCodeLine{108     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{classGraph}{Graph}}<T>;}
+\DoxyCodeLine{109     \textcolor{keyword}{friend} \textcolor{keyword}{class }\mbox{\hyperlink{classVertex}{Vertex}}<T>;}
+\DoxyCodeLine{110     \textcolor{keywordtype}{bool} operator<(\textcolor{keyword}{const} \mbox{\hyperlink{classEdge}{Edge<T>}} \& edge) \textcolor{keyword}{const};}
+\DoxyCodeLine{111 \};}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{114 \mbox{\hyperlink{classEdge}{Edge<T>::Edge}}(\mbox{\hyperlink{classVertex}{Vertex<T>}} *d, \textcolor{keywordtype}{int} duration, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w): dest(d), weight(w), capacity(c), duration(duration), flux(0)\{\}}
+\DoxyCodeLine{115 }
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117 \textcolor{comment}{/*************************** Graph  **************************/}}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{120 \textcolor{keyword}{class }\mbox{\hyperlink{classGraph}{Graph}} \{}
+\DoxyCodeLine{121 \textcolor{keyword}{private}:}
+\DoxyCodeLine{122     \textcolor{keywordtype}{int} numberNodes, numberEdges;}
+\DoxyCodeLine{123     std::vector<Vertex<T> *> vertexSet;    \textcolor{comment}{// vertex set}}
+\DoxyCodeLine{124     std::vector<Vertex<T> *> vertex;}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126     \textcolor{comment}{//Fp05}}
+\DoxyCodeLine{127     \mbox{\hyperlink{classVertex}{Vertex<T>}} * initSingleSource(\textcolor{keyword}{const} T \&orig);}
+\DoxyCodeLine{128     \textcolor{keywordtype}{bool} relax(\mbox{\hyperlink{classVertex}{Vertex<T>}} *v, \mbox{\hyperlink{classVertex}{Vertex<T>}} *w, \textcolor{keywordtype}{int} weight);}
+\DoxyCodeLine{129     \textcolor{keywordtype}{int} ** W = \textcolor{keyword}{nullptr};   \textcolor{comment}{// dist}}
+\DoxyCodeLine{130     \textcolor{keywordtype}{int} **P = \textcolor{keyword}{nullptr};   \textcolor{comment}{// path}}
+\DoxyCodeLine{131     \textcolor{keywordtype}{int} findVertexIdx(\textcolor{keyword}{const} T \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{132 }
+\DoxyCodeLine{133 \textcolor{keyword}{public}:}
+\DoxyCodeLine{134     map<vector<T>, \textcolor{keywordtype}{int}> paths;}
+\DoxyCodeLine{135     vector<T> mutatingPath;}
+\DoxyCodeLine{136     \mbox{\hyperlink{classGraph}{\string~Graph}}();}
+\DoxyCodeLine{137     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{printPath}}(std::map<vector<T>, T> printablePath); \textcolor{comment}{// prints a string meaning n subjects go through path}}
+\DoxyCodeLine{138     \mbox{\hyperlink{classVertex}{Vertex<T>}} *findVertex(\textcolor{keyword}{const} T \&in) \textcolor{keyword}{const};}
+\DoxyCodeLine{139     \textcolor{keywordtype}{bool} addVertex(\textcolor{keyword}{const} T \&in);}
+\DoxyCodeLine{140     \textcolor{keywordtype}{bool} addEdge(\textcolor{keyword}{const} T \&sourc, \textcolor{keyword}{const} T \&dest, \textcolor{keywordtype}{int} d, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w);}
+\DoxyCodeLine{141     \textcolor{keywordtype}{int} getNumVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{142     std::vector<Vertex<T> *> getVertexSet() \textcolor{keyword}{const};}
+\DoxyCodeLine{143     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a740b9faf9f19dd485602f67054154514}{FindPathGivenGroupSize}}(T st, T ta, \textcolor{keywordtype}{int} groupSize);}
+\DoxyCodeLine{144     \textcolor{keywordtype}{int} getNumberNodes() \textcolor{keyword}{const};}
+\DoxyCodeLine{145     \textcolor{keywordtype}{int} getNumberEdges() \textcolor{keyword}{const};}
+\DoxyCodeLine{146     \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_ada2556157dbf5defa8a30cdc0b996136}{firstAlgorithm}}(T start, T end);}
+\DoxyCodeLine{147     \textcolor{keywordtype}{bool} heapComp(\textcolor{keyword}{const} \mbox{\hyperlink{classVertex}{Vertex<T>}}* v1,\textcolor{keyword}{const} \mbox{\hyperlink{classVertex}{Vertex<T>}}* v2) \textcolor{keyword}{const};}
+\DoxyCodeLine{148     \textcolor{keywordtype}{void} setNumberNodes(\textcolor{keywordtype}{int} numberNodes);}
+\DoxyCodeLine{149     \textcolor{keywordtype}{void} setNumberEdges(\textcolor{keywordtype}{int} numberEdges);}
+\DoxyCodeLine{150     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a653077e6fdcea071088335aa4bc58a8c}{paretoOptimalGroupSizeAndTransportShift}}(T origin, T target);}
+\DoxyCodeLine{151     \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a67752a8ed6c82965ab0109769010d33a}{recursivePathFinderLimited}}(T current, T target, \textcolor{keywordtype}{int} currentCap, \textcolor{keywordtype}{int} bfsCap, \textcolor{keywordtype}{int} maxCapEdges);}
+\DoxyCodeLine{152     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ada3eeca97dce09fe05586c762834c6c7}{allVisitedFalse}}();}
+\DoxyCodeLine{153     \textcolor{comment}{// Single-\/source shortest path -\/ Greedy}}
+\DoxyCodeLine{154     \textcolor{keywordtype}{void} dijkstraShortestPath(\textcolor{keyword}{const} T \&s);}
+\DoxyCodeLine{155     \textcolor{keywordtype}{void} unweightedShortestPath(\textcolor{keyword}{const} T \&s);}
+\DoxyCodeLine{156 }
+\DoxyCodeLine{157     \textcolor{comment}{// FP03B -\/ Single-\/shource shortest path -\/ Dynamic Programming -\/ Bellman-\/Ford}}
+\DoxyCodeLine{158     \textcolor{keywordtype}{void} bellmanFordShortestPath(\textcolor{keyword}{const} T \&s); \textcolor{comment}{//TODO...}}
+\DoxyCodeLine{159     std::vector<T> \mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(\textcolor{keyword}{const} T \&origin, \textcolor{keyword}{const} T \&dest) \textcolor{keyword}{const}; \textcolor{comment}{//TODO...}}
+\DoxyCodeLine{160 }
+\DoxyCodeLine{161     \textcolor{comment}{// FP03B -\/ All-\/pair shortest path -\/  Dynamic Programming -\/ Floyd-\/Warshall}}
+\DoxyCodeLine{162     \textcolor{keywordtype}{void} floydWarshallShortestPath(); \textcolor{comment}{//TODO...}}
+\DoxyCodeLine{163     std::vector<T> getfloydWarshallPath(\textcolor{keyword}{const} T \&origin, \textcolor{keyword}{const} T \&dest) \textcolor{keyword}{const}; \textcolor{comment}{//TODO...}}
+\DoxyCodeLine{164 }
+\DoxyCodeLine{165     \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}{edmondKarpFlux}}(T st, T ta);}
+\DoxyCodeLine{166     \mbox{\hyperlink{classGraph}{Graph<T>}} \mbox{\hyperlink{classGraph_aa167310b94b212c2c924f4c68038c7e4}{residualGrid}}();}
+\DoxyCodeLine{167     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a5c657f3051db9c08b79239622a495b58}{zeroFlux}}();}
+\DoxyCodeLine{168 }
+\DoxyCodeLine{169     \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}{increaseGroupSize}}(T st, T ta, \textcolor{keywordtype}{int} inc);}
+\DoxyCodeLine{170     \textcolor{keywordtype}{void} auxTest2\_4();}
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}{topoSort}}(T st, std::stack<\mbox{\hyperlink{classVertex}{Vertex<T>}}*> \&stack);}
+\DoxyCodeLine{173     \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}{longestPath}}(T st, T ta);}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175     \textcolor{keywordtype}{void} printGraph();}
+\DoxyCodeLine{176 }
+\DoxyCodeLine{177     \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a2931de4d06954374ee4724b5817133e1}{vertexTime}}(T st, T ta);}
+\DoxyCodeLine{178     vector<vector<T>> capacityOrEdges(T st, T ta);}
+\DoxyCodeLine{179     map<vector<int>, \textcolor{keywordtype}{int}> \mbox{\hyperlink{classGraph_aeb0fe13c3c612eaf2efab2043f29196b}{filterPathsByDominance}}();}
+\DoxyCodeLine{180 \};}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{183 \textcolor{keywordtype}{int} \mbox{\hyperlink{classEdge}{Edge<T>::getDuration}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{184     \textcolor{keywordflow}{return} duration;}
+\DoxyCodeLine{185 \}}
+\DoxyCodeLine{186 }
+\DoxyCodeLine{187 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{188 \textcolor{keywordtype}{void} \mbox{\hyperlink{classEdge}{Edge<T>::setDuration}}(\textcolor{keywordtype}{int} duration) \{}
+\DoxyCodeLine{189     Edge::duration = duration;}
+\DoxyCodeLine{190 \}}
+\DoxyCodeLine{191 }
+\DoxyCodeLine{192 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{193 \textcolor{keywordtype}{int} \mbox{\hyperlink{classEdge}{Edge<T>::getFlux}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{194     \textcolor{keywordflow}{return} flux;}
+\DoxyCodeLine{195 \}}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{198 \textcolor{keywordtype}{void} \mbox{\hyperlink{classEdge}{Edge<T>::setFlux}}(\textcolor{keywordtype}{int} flux) \{}
+\DoxyCodeLine{199     Edge::flux = flux;}
+\DoxyCodeLine{200 \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{203 \textcolor{keywordtype}{int} \mbox{\hyperlink{classEdge}{Edge<T>::getWeight}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{204     \textcolor{keywordflow}{return} weight;}
+\DoxyCodeLine{205 \}}
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{208 \textcolor{keywordtype}{void} \mbox{\hyperlink{classEdge}{Edge<T>::setWeight}}(\textcolor{keywordtype}{int} weight) \{}
+\DoxyCodeLine{209     Edge::weight = weight;}
+\DoxyCodeLine{210 \}}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{212 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{213 \textcolor{keywordtype}{int} \mbox{\hyperlink{classEdge}{Edge<T>::getCapacity}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{214     \textcolor{keywordflow}{return} capacity;}
+\DoxyCodeLine{215 \}}
+\DoxyCodeLine{216 }
+\DoxyCodeLine{217 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{218 \textcolor{keywordtype}{void} \mbox{\hyperlink{classEdge}{Edge<T>::setCapacity}}(\textcolor{keywordtype}{int} capacity) \{}
+\DoxyCodeLine{219     Edge::capacity = capacity;}
+\DoxyCodeLine{220 \}}
+\DoxyCodeLine{221 }
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{224 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph}{Graph<T>::getNumVertex}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{225     \textcolor{keywordflow}{return} vertexSet.size();}
+\DoxyCodeLine{226 \}}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{228 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{229 std::vector<Vertex<T> *> \mbox{\hyperlink{classGraph}{Graph<T>::getVertexSet}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{230     \textcolor{keywordflow}{return} vertexSet;}
+\DoxyCodeLine{231 \}}
+\DoxyCodeLine{232 }
+\DoxyCodeLine{233 \textcolor{comment}{/*}}
+\DoxyCodeLine{234 \textcolor{comment}{ * Auxiliary function to find a vertex with a given content.}}
+\DoxyCodeLine{235 \textcolor{comment}{ */}}
+\DoxyCodeLine{236 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{237 \mbox{\hyperlink{classVertex}{Vertex<T>}} * \mbox{\hyperlink{classGraph}{Graph<T>::findVertex}}(\textcolor{keyword}{const} T \&in)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{238     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} v : vertexSet)}
+\DoxyCodeLine{239         \textcolor{keywordflow}{if} (v-\/>info == in)}
+\DoxyCodeLine{240             \textcolor{keywordflow}{return} v;}
+\DoxyCodeLine{241     \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{242 \}}
+\DoxyCodeLine{243 }
+\DoxyCodeLine{244 \textcolor{comment}{/*}}
+\DoxyCodeLine{245 \textcolor{comment}{ * Finds the index of the vertex with a given content.}}
+\DoxyCodeLine{246 \textcolor{comment}{ */}}
+\DoxyCodeLine{247 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{248 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph}{Graph<T>::findVertexIdx}}(\textcolor{keyword}{const} T \&in)\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{249     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{unsigned} i = 0; i < vertexSet.size(); i++)}
+\DoxyCodeLine{250         \textcolor{keywordflow}{if} (vertexSet[i]-\/>info == in)}
+\DoxyCodeLine{251             \textcolor{keywordflow}{return} i;}
+\DoxyCodeLine{252     \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{253 \}}
+\DoxyCodeLine{254 \textcolor{comment}{/*}}
+\DoxyCodeLine{255 \textcolor{comment}{ *  Adds a vertex with a given content or info (in) to a graph (this).}}
+\DoxyCodeLine{256 \textcolor{comment}{ *  Returns true if successful, and false if a vertex with that content already exists.}}
+\DoxyCodeLine{257 \textcolor{comment}{ */}}
+\DoxyCodeLine{258 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{259 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classGraph}{Graph<T>::addVertex}}(\textcolor{keyword}{const} T \&in) \{}
+\DoxyCodeLine{260     \textcolor{keywordflow}{if} (findVertex(in) != \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{261         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{262     vertexSet.push\_back(\textcolor{keyword}{new} \mbox{\hyperlink{classVertex}{Vertex<T>}}(in));}
+\DoxyCodeLine{263     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{264 \}}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 \textcolor{comment}{/*}}
+\DoxyCodeLine{267 \textcolor{comment}{ * Adds an edge to a graph (this), given the contents of the source and}}
+\DoxyCodeLine{268 \textcolor{comment}{ * destination vertices and the edge weight (w).}}
+\DoxyCodeLine{269 \textcolor{comment}{ * Returns true if successful, and false if the source or destination vertex does not exist.}}
+\DoxyCodeLine{270 \textcolor{comment}{ */}}
+\DoxyCodeLine{271 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{272 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classGraph}{Graph<T>::addEdge}}(\textcolor{keyword}{const} T \&sourc, \textcolor{keyword}{const} T \&dest, \textcolor{keywordtype}{int} d, \textcolor{keywordtype}{int} c, \textcolor{keywordtype}{int} w) \{}
+\DoxyCodeLine{273     \textcolor{keyword}{auto} v1 = findVertex(sourc);}
+\DoxyCodeLine{274     \textcolor{keyword}{auto} v2 = findVertex(dest);}
+\DoxyCodeLine{275     \textcolor{keywordflow}{if} (v1 == \textcolor{keyword}{nullptr} || v2 == \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{276         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{277     v1-\/>addEdge(v2, d, c, w);}
+\DoxyCodeLine{278     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{279 \}}
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281 }
+\DoxyCodeLine{282 \textcolor{comment}{/**************** Single Source Shortest Path algorithms ************/}}
+\DoxyCodeLine{283 }
+\DoxyCodeLine{289 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{290 \mbox{\hyperlink{classVertex}{Vertex<T>}} * \mbox{\hyperlink{classGraph}{Graph<T>::initSingleSource}}(\textcolor{keyword}{const} T \&origin) \{}
+\DoxyCodeLine{291     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} v : vertexSet) \{}
+\DoxyCodeLine{292         v-\/>dist = INF;}
+\DoxyCodeLine{293         v-\/>path = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{294         v-\/>visited = \textcolor{keyword}{false};}
+\DoxyCodeLine{295     \}}
+\DoxyCodeLine{296     \textcolor{keyword}{auto} s = findVertex(origin);}
+\DoxyCodeLine{297     s-\/>dist = 0;}
+\DoxyCodeLine{298     s-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{299     \textcolor{keywordflow}{return} s;}
+\DoxyCodeLine{300 \}}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{307 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{308 \textcolor{keyword}{inline} \textcolor{keywordtype}{bool} \mbox{\hyperlink{classGraph}{Graph<T>::relax}}(\mbox{\hyperlink{classVertex}{Vertex<T>}} *v, \mbox{\hyperlink{classVertex}{Vertex<T>}} *w, \textcolor{keywordtype}{int} weight) \{}
+\DoxyCodeLine{309     \textcolor{keywordflow}{if} (v-\/>dist + weight < w-\/>dist) \{}
+\DoxyCodeLine{310         w-\/>dist = v-\/>dist + weight;}
+\DoxyCodeLine{311         w-\/>path = v;}
+\DoxyCodeLine{312         \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{313     \}}
+\DoxyCodeLine{314     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{315         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{316 \}}
+\DoxyCodeLine{317 }
+\DoxyCodeLine{318 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{319 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::dijkstraShortestPath}}(\textcolor{keyword}{const} T \&origin) \{ \textcolor{comment}{//uses duration instead of weight}}
+\DoxyCodeLine{320     \textcolor{keyword}{auto} s = initSingleSource(origin);}
+\DoxyCodeLine{321     \mbox{\hyperlink{classMutablePriorityQueue}{MutablePriorityQueue<Vertex<T>}}> q;}
+\DoxyCodeLine{322     q.insert(s);}
+\DoxyCodeLine{323     \textcolor{keywordflow}{while}( ! q.empty() ) \{}
+\DoxyCodeLine{324         \textcolor{keyword}{auto} v = q.extractMin();}
+\DoxyCodeLine{325         \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} e : v-\/>adj) \{}
+\DoxyCodeLine{326             \textcolor{keyword}{auto} oldDist = e.dest-\/>dist;}
+\DoxyCodeLine{327             \textcolor{keywordflow}{if} (relax(v, e.dest, e.duration)) \{}
+\DoxyCodeLine{328                 \textcolor{keywordflow}{if} (oldDist == INF)}
+\DoxyCodeLine{329                     q.insert(e.dest);}
+\DoxyCodeLine{330                 \textcolor{keywordflow}{else}}
+\DoxyCodeLine{331                     q.decreaseKey(e.dest);}
+\DoxyCodeLine{332             \}}
+\DoxyCodeLine{333         \}}
+\DoxyCodeLine{334     \}}
+\DoxyCodeLine{335 \}}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{338 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::unweightedShortestPath}}(\textcolor{keyword}{const} T \&orig) \{}
+\DoxyCodeLine{339     \textcolor{keyword}{auto} s = initSingleSource(orig);}
+\DoxyCodeLine{340     std::queue< Vertex<T>* > q;}
+\DoxyCodeLine{341     q.push(s);}
+\DoxyCodeLine{342     s-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{343     \textcolor{keywordflow}{while}( ! q.empty() ) \{}
+\DoxyCodeLine{344         \textcolor{keyword}{auto} v = q.front();}
+\DoxyCodeLine{345         q.pop();}
+\DoxyCodeLine{346         \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} e: v-\/>adj)}
+\DoxyCodeLine{347             \textcolor{keywordflow}{if} (relax(v, e.dest, 1)) \{}
+\DoxyCodeLine{348                 q.push(e.dest);}
+\DoxyCodeLine{349                 e.dest-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{350             \}}
+\DoxyCodeLine{351     \}}
+\DoxyCodeLine{352 \}}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{354 }
+\DoxyCodeLine{355 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{356 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::bellmanFordShortestPath}}(\textcolor{keyword}{const} T \&orig) \{}
+\DoxyCodeLine{357     \textcolor{comment}{// TODO implement this}}
+\DoxyCodeLine{358 \}}
+\DoxyCodeLine{359 }
+\DoxyCodeLine{365 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{366 std::vector<T> \mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{Graph<T>::getPath}}(\textcolor{keyword}{const} T \&origin, \textcolor{keyword}{const} T \&dest)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{367     std::vector<T> res;}
+\DoxyCodeLine{368     \mbox{\hyperlink{classVertex}{Vertex<T>}} pred = *findVertex(dest); \textcolor{comment}{//pred = dest}}
+\DoxyCodeLine{369     \textcolor{keywordflow}{if}(!pred.visited) \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{370     res.push\_back(pred.getInfo());}
+\DoxyCodeLine{371     \textcolor{keywordflow}{while}(pred.info != origin)\{}
+\DoxyCodeLine{372         pred = *(pred.path);}
+\DoxyCodeLine{373         res.push\_back(pred.getInfo());}
+\DoxyCodeLine{374     \}}
+\DoxyCodeLine{375     \textcolor{comment}{//reverse vector}}
+\DoxyCodeLine{376     std::reverse(res.begin(), res.end());}
+\DoxyCodeLine{377 }
+\DoxyCodeLine{378     \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{379 \}}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381 }
+\DoxyCodeLine{382 \textcolor{comment}{/**************** All Pairs Shortest Path  ***************/}}
+\DoxyCodeLine{383 }
+\DoxyCodeLine{384 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{385 \textcolor{keywordtype}{void} deleteMatrix(T **m, \textcolor{keywordtype}{int} n) \{}
+\DoxyCodeLine{386     \textcolor{keywordflow}{if} (m != \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{387         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < n; i++)}
+\DoxyCodeLine{388             \textcolor{keywordflow}{if} (m[i] != \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{389                 \textcolor{keyword}{delete} [] m[i];}
+\DoxyCodeLine{390         \textcolor{keyword}{delete} [] m;}
+\DoxyCodeLine{391     \}}
+\DoxyCodeLine{392 \}}
+\DoxyCodeLine{393 }
+\DoxyCodeLine{394 \textcolor{keyword}{template} <\textcolor{keyword}{class} T>}
+\DoxyCodeLine{395 \mbox{\hyperlink{classGraph}{Graph<T>::\string~Graph}}() \{}
+\DoxyCodeLine{396     deleteMatrix(W, vertexSet.size());}
+\DoxyCodeLine{397     deleteMatrix(P, vertexSet.size());}
+\DoxyCodeLine{398 \}}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{401 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::floydWarshallShortestPath}}() \{}
+\DoxyCodeLine{402     \textcolor{comment}{//implement this}}
+\DoxyCodeLine{403 \}}
+\DoxyCodeLine{404 }
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{407 std::vector<T> \mbox{\hyperlink{classGraph}{Graph<T>::getfloydWarshallPath}}(\textcolor{keyword}{const} T \&orig, \textcolor{keyword}{const} T \&dest)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{408     std::vector<T> res;}
+\DoxyCodeLine{409     \textcolor{comment}{//implement this}}
+\DoxyCodeLine{410     \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{411 \}}
+\DoxyCodeLine{412 }
+\DoxyCodeLine{413 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{414 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph}{Graph<T>::getNumberNodes}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{415     \textcolor{keywordflow}{return} numberNodes;}
+\DoxyCodeLine{416 \}}
+\DoxyCodeLine{417 }
+\DoxyCodeLine{418 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{419 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph}{Graph<T>::getNumberEdges}}()\textcolor{keyword}{ const }\{}
+\DoxyCodeLine{420     \textcolor{keywordflow}{return} numberEdges;}
+\DoxyCodeLine{421 \}}
+\DoxyCodeLine{422 }
+\DoxyCodeLine{423 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{424 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::setNumberNodes}}(\textcolor{keywordtype}{int} numberNodes) \{}
+\DoxyCodeLine{425     Graph::numberNodes = numberNodes;}
+\DoxyCodeLine{426 \}}
+\DoxyCodeLine{427 }
+\DoxyCodeLine{428 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{429 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph}{Graph<T>::setNumberEdges}}(\textcolor{keywordtype}{int} numberEdges) \{}
+\DoxyCodeLine{430     Graph::numberEdges = numberEdges;}
+\DoxyCodeLine{431 \}}
+\DoxyCodeLine{432 }
+\DoxyCodeLine{439 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{440 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}{Graph<T>::edmondKarpFlux}}(T st, T ta) \{}
+\DoxyCodeLine{441     \mbox{\hyperlink{classVertex}{Vertex<T>}} origin(st);}
+\DoxyCodeLine{442     std::vector<T> path;}
+\DoxyCodeLine{443     \textcolor{keywordtype}{int} resCap = INF;}
+\DoxyCodeLine{444     \mbox{\hyperlink{classGraph}{Graph<T>}} resGrid;}
+\DoxyCodeLine{445 }
+\DoxyCodeLine{446     zeroFlux();}
+\DoxyCodeLine{447 }
+\DoxyCodeLine{448     \textcolor{comment}{//determine residual grid}}
+\DoxyCodeLine{449     resGrid = residualGrid();}
+\DoxyCodeLine{450     resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{451     path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{452     \mbox{\hyperlink{classVertex}{Vertex<T>}} destination = *(resGrid.findVertex(ta));}
+\DoxyCodeLine{453 }
+\DoxyCodeLine{454     \textcolor{comment}{//while there is a path in the Residual Grid}}
+\DoxyCodeLine{455     \textcolor{keywordflow}{while}(destination.visited)\{}
+\DoxyCodeLine{456 }
+\DoxyCodeLine{457         \textcolor{comment}{//find minimun Cf in path}}
+\DoxyCodeLine{458         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/1; i++)\{}
+\DoxyCodeLine{459             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: (resGrid.findVertex(path[i]))-\/>adj)\{}
+\DoxyCodeLine{460                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{461                 \textcolor{keywordflow}{if}(edge.dest-\/>info == resGrid.findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{462                     resCap = std::min(edge.getWeight(), resCap);}
+\DoxyCodeLine{463                 \}}
+\DoxyCodeLine{464             \}}
+\DoxyCodeLine{465         \}}
+\DoxyCodeLine{466 }
+\DoxyCodeLine{467         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/ 1; i++)\{}
+\DoxyCodeLine{468             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} \&edge: findVertex(path[i])-\/>adj)\{}
+\DoxyCodeLine{469                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{470                 \textcolor{keywordflow}{if}(edge.dest-\/>info == findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{471                     edge.setFlux(resCap + edge.getFlux());}
+\DoxyCodeLine{472                 \}}
+\DoxyCodeLine{473             \}}
+\DoxyCodeLine{474         \}}
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476         pair<vector<T>, \textcolor{keywordtype}{int}> res;}
+\DoxyCodeLine{477         res.first = path;}
+\DoxyCodeLine{478         res.second = resCap;}
+\DoxyCodeLine{479         \textcolor{keywordflow}{if} (!paths.insert(res).second) \{}
+\DoxyCodeLine{480             paths.find(path)-\/>second += resCap;}
+\DoxyCodeLine{481         \}}
+\DoxyCodeLine{482 }
+\DoxyCodeLine{483         \textcolor{comment}{//determine residual grid}}
+\DoxyCodeLine{484         resGrid = residualGrid();}
+\DoxyCodeLine{485         resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{486         path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{487         destination = *(resGrid.findVertex(ta));}
+\DoxyCodeLine{488     \}}
+\DoxyCodeLine{489 }
+\DoxyCodeLine{490     origin = *(findVertex(st));}
+\DoxyCodeLine{491     \textcolor{keywordtype}{int} maxFlux = 0;}
+\DoxyCodeLine{492     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: origin.adj)\{}
+\DoxyCodeLine{493         maxFlux+= edge.getFlux();}
+\DoxyCodeLine{494     \}}
+\DoxyCodeLine{495     \textcolor{keywordflow}{return} maxFlux;}
+\DoxyCodeLine{496 \}}
+\DoxyCodeLine{499 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{500 \mbox{\hyperlink{classGraph}{Graph<T>}} \mbox{\hyperlink{classGraph_aa167310b94b212c2c924f4c68038c7e4}{Graph<T>::residualGrid}}() \{}
+\DoxyCodeLine{501     \mbox{\hyperlink{classGraph}{Graph<T>}} residualGrid;}
+\DoxyCodeLine{502     \textcolor{comment}{//add all vertexes}}
+\DoxyCodeLine{503     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} v: vertexSet)\{}
+\DoxyCodeLine{504         residualGrid.addVertex(v-\/>info);}
+\DoxyCodeLine{505     \}}
+\DoxyCodeLine{506     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v: vertexSet)\{}
+\DoxyCodeLine{507         \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge : v-\/>adj)\{}
+\DoxyCodeLine{508             \textcolor{comment}{//Cf(u,v)}}
+\DoxyCodeLine{509             \textcolor{keywordflow}{if}(edge.capacity -\/ edge.getFlux() > 0) residualGrid.addEdge(v-\/>info, edge.dest-\/>info, edge.duration, edge.capacity, edge.capacity -\/ edge.getFlux());}
+\DoxyCodeLine{510         \}}
+\DoxyCodeLine{511     \}}
+\DoxyCodeLine{512 }
+\DoxyCodeLine{513     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} v: vertexSet)\{}
+\DoxyCodeLine{514         \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge : v-\/>adj)\{}
+\DoxyCodeLine{515             \textcolor{comment}{//Cf(v,u)}}
+\DoxyCodeLine{516             \textcolor{keywordflow}{if}(edge.getFlux() > 0) residualGrid.addEdge(edge.dest-\/>info ,v-\/>info, edge.duration, edge.capacity, edge.getFlux());}
+\DoxyCodeLine{517         \}}
+\DoxyCodeLine{518     \}}
+\DoxyCodeLine{519     \textcolor{keywordflow}{return} residualGrid;}
+\DoxyCodeLine{520 \}}
+\DoxyCodeLine{522 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{523 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a5c657f3051db9c08b79239622a495b58}{Graph<T>::zeroFlux}}() \{}
+\DoxyCodeLine{524     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} v: vertexSet)\{}
+\DoxyCodeLine{525         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < v-\/>adj.size(); i++)\{}
+\DoxyCodeLine{526             v-\/>adj[i].setFlux(0);}
+\DoxyCodeLine{527         \}}
+\DoxyCodeLine{528     \}}
+\DoxyCodeLine{529 \}}
+\DoxyCodeLine{530 }
+\DoxyCodeLine{538 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{539 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}{Graph<T>::increaseGroupSize}}(T st, T ta, \textcolor{keywordtype}{int} inc) \{}
+\DoxyCodeLine{540     \mbox{\hyperlink{classVertex}{Vertex<T>}} origin = *(findVertex(st));}
+\DoxyCodeLine{541     std::vector<T> path;}
+\DoxyCodeLine{542     \textcolor{keywordtype}{int} resCap = INF;}
+\DoxyCodeLine{543     \mbox{\hyperlink{classGraph}{Graph<T>}} resGrid;}
+\DoxyCodeLine{544 }
+\DoxyCodeLine{545     \textcolor{comment}{//get initial flux}}
+\DoxyCodeLine{546     \textcolor{keywordtype}{int} initialFlux = 0;}
+\DoxyCodeLine{547     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: origin.adj)\{}
+\DoxyCodeLine{548         initialFlux += edge.getFlux();}
+\DoxyCodeLine{549     \}}
+\DoxyCodeLine{550     \textcolor{keywordtype}{int} newFlux = initialFlux;}
+\DoxyCodeLine{551 }
+\DoxyCodeLine{552     \textcolor{comment}{//determine residual grid}}
+\DoxyCodeLine{553     resGrid = residualGrid();}
+\DoxyCodeLine{554     resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{555     path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{556     \mbox{\hyperlink{classVertex}{Vertex<T>}} destination = *(resGrid.findVertex(ta));}
+\DoxyCodeLine{557 }
+\DoxyCodeLine{558     \textcolor{comment}{//while there is a path in the Residual Grid}}
+\DoxyCodeLine{559     \textcolor{keywordflow}{while}((newFlux -\/ initialFlux < inc) \&\& destination.visited)\{}
+\DoxyCodeLine{560 }
+\DoxyCodeLine{561         \textcolor{comment}{//find minimun Cf in path}}
+\DoxyCodeLine{562         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/1; i++)\{}
+\DoxyCodeLine{563             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: (resGrid.findVertex(path[i]))-\/>adj)\{}
+\DoxyCodeLine{564                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{565                 \textcolor{keywordflow}{if}(edge.dest-\/>info == resGrid.findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{566                     resCap = std::min(edge.getWeight(), resCap);}
+\DoxyCodeLine{567                 \}}
+\DoxyCodeLine{568             \}}
+\DoxyCodeLine{569         \}}
+\DoxyCodeLine{570 }
+\DoxyCodeLine{571         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/1; i++)\{}
+\DoxyCodeLine{572             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} \&edge: findVertex(path[i])-\/>adj)\{}
+\DoxyCodeLine{573                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{574                 \textcolor{keywordflow}{if}(edge.dest-\/>info == findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{575                     edge.setFlux(resCap + edge.getFlux());}
+\DoxyCodeLine{576                 \}}
+\DoxyCodeLine{577             \}}
+\DoxyCodeLine{578         \}}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580         pair<vector<T>, \textcolor{keywordtype}{int}> res;}
+\DoxyCodeLine{581         res.first = path;}
+\DoxyCodeLine{582         res.second = resCap;}
+\DoxyCodeLine{583         \textcolor{keywordflow}{if} (!paths.insert(res).second) \{}
+\DoxyCodeLine{584             paths.find(path)-\/>second += resCap;}
+\DoxyCodeLine{585         \}}
+\DoxyCodeLine{586 }
+\DoxyCodeLine{587         \textcolor{comment}{//determine residual grid}}
+\DoxyCodeLine{588         resGrid = residualGrid();}
+\DoxyCodeLine{589         resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{590         path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{591         destination = *(resGrid.findVertex(ta));}
+\DoxyCodeLine{592 }
+\DoxyCodeLine{593         \textcolor{comment}{//update origin}}
+\DoxyCodeLine{594         origin = *(findVertex(st));}
+\DoxyCodeLine{595         \textcolor{comment}{//determine current max-\/flux}}
+\DoxyCodeLine{596         newFlux = 0;}
+\DoxyCodeLine{597         \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: origin.adj)\{}
+\DoxyCodeLine{598             newFlux+= edge.getFlux();}
+\DoxyCodeLine{599         \}}
+\DoxyCodeLine{600     \}}
+\DoxyCodeLine{601     \textcolor{comment}{//if it reaches full flux before increasing enough, it means its impossible to increase by the desired amount}}
+\DoxyCodeLine{602     \textcolor{keywordflow}{if}(newFlux -\/ initialFlux < inc) \textcolor{keywordflow}{return} -\/1;}
+\DoxyCodeLine{603     \textcolor{keywordflow}{return} newFlux -\/ initialFlux;}
+\DoxyCodeLine{604 \}}
+\DoxyCodeLine{605 }
+\DoxyCodeLine{608 \textcolor{comment}{/*}}
+\DoxyCodeLine{609 \textcolor{comment}{template<class T>}}
+\DoxyCodeLine{610 \textcolor{comment}{void Graph<T>::printGraph()\{}}
+\DoxyCodeLine{611 \textcolor{comment}{    std::set<std::pair<int, int>> printed;}}
+\DoxyCodeLine{612 \textcolor{comment}{    for(auto v: vertexSet)\{}}
+\DoxyCodeLine{613 \textcolor{comment}{        for(Edge<T> edge: v-\/>adj)\{}}
+\DoxyCodeLine{614 \textcolor{comment}{            //if has not been printed yet}}
+\DoxyCodeLine{615 \textcolor{comment}{            if(printed.find(std::pair(v-\/>info, edge.dest-\/>info) == printed.end()))\{}}
+\DoxyCodeLine{616 \textcolor{comment}{                std::cout << "{}Source: "{} << v-\/>info << "{} Destination: "{} << edge.dest-\/>info}}
+\DoxyCodeLine{617 \textcolor{comment}{                << "{} Flux: "{} << edge.getFlux() << "{} Capacity: "{} << edge.getCapacity() << std::endl;}}
+\DoxyCodeLine{618 \textcolor{comment}{                //add to set}}
+\DoxyCodeLine{619 \textcolor{comment}{                printed.insert(std::pair(v-\/>info, edge.dest-\/>info));}}
+\DoxyCodeLine{620 \textcolor{comment}{            \}}}
+\DoxyCodeLine{621 \textcolor{comment}{        \}}}
+\DoxyCodeLine{622 \textcolor{comment}{    \}}}
+\DoxyCodeLine{623 \textcolor{comment}{\}*/}}
+\DoxyCodeLine{630 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{631 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_ada2556157dbf5defa8a30cdc0b996136}{Graph<T>::firstAlgorithm}}(T start, T end) \{}
+\DoxyCodeLine{632     \mbox{\hyperlink{classMinHeap}{MinHeap<Vertex<T>}}*, \textcolor{keywordtype}{int}> heap(numberNodes, \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{633     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v: vertexSet)\{}
+\DoxyCodeLine{634         v-\/>path = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{635         v-\/>cap = 0;}
+\DoxyCodeLine{636         v-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{637         heap.\mbox{\hyperlink{classMinHeap_a708cab4630ba761be49aea0ae536d772}{insert}}(v, -\/(v-\/>cap));}
+\DoxyCodeLine{638     \}}
+\DoxyCodeLine{639     \mbox{\hyperlink{classVertex}{Vertex<T>}} * origin = findVertex(start);}
+\DoxyCodeLine{640     origin-\/>cap = INF;}
+\DoxyCodeLine{641     heap.\mbox{\hyperlink{classMinHeap_acb40738ccbaf73f7c093f8504387587b}{decreaseKey}}(origin, -\/INF);}
+\DoxyCodeLine{642     \textcolor{keywordflow}{while}(heap.\mbox{\hyperlink{classMinHeap_a17652e042dae3954be25a1cd9e04f3b0}{getSize}}() > 0)\{}
+\DoxyCodeLine{643        \mbox{\hyperlink{classVertex}{Vertex<T>}}* vec = heap.\mbox{\hyperlink{classMinHeap_a3ab07802846cc4314d7ec383180d3b82}{removeMin}}();}
+\DoxyCodeLine{644 }
+\DoxyCodeLine{645         \textcolor{comment}{//std::pop\_heap(heap.begin(), heap.end());}}
+\DoxyCodeLine{646         \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: vec-\/>adj)\{}
+\DoxyCodeLine{647             \textcolor{keywordflow}{if}(std::min(vec-\/>cap,edge.capacity) > edge.dest-\/>cap)\{}
+\DoxyCodeLine{648                 edge.dest-\/>cap = std::min(vec-\/>cap,edge.capacity);}
+\DoxyCodeLine{649                 edge.dest-\/>path = vec;}
+\DoxyCodeLine{650                 heap.\mbox{\hyperlink{classMinHeap_acb40738ccbaf73f7c093f8504387587b}{decreaseKey}}(edge.dest, -\/(edge.dest-\/>cap));}
+\DoxyCodeLine{651             \}}
+\DoxyCodeLine{652         \}}
+\DoxyCodeLine{653     \}}
+\DoxyCodeLine{654     }
+\DoxyCodeLine{655     \mbox{\hyperlink{classVertex}{Vertex<T>}}* vertex;}
+\DoxyCodeLine{656     \textcolor{keywordtype}{int} mincap = INF;}
+\DoxyCodeLine{657     vector<T> path = getPath(start, end);}
+\DoxyCodeLine{658     \textcolor{keywordflow}{for}(T info : path)\{}
+\DoxyCodeLine{659         vertex = findVertex(info);}
+\DoxyCodeLine{660         mincap = std::min(mincap, vertex-\/>cap);}
+\DoxyCodeLine{661     \}}
+\DoxyCodeLine{662 }
+\DoxyCodeLine{663 }
+\DoxyCodeLine{664 }
+\DoxyCodeLine{665     \textcolor{keywordflow}{return} mincap;}
+\DoxyCodeLine{666 \}}
+\DoxyCodeLine{667 }
+\DoxyCodeLine{668 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{669 \textcolor{keywordtype}{bool} \mbox{\hyperlink{classEdge}{Edge<T>::operator<}}(\textcolor{keyword}{const} \mbox{\hyperlink{classEdge}{Edge<T>}} \& edge)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{670     \textcolor{keywordflow}{return} capacity < edge.getCapacity();}
+\DoxyCodeLine{671 \}}
+\DoxyCodeLine{672 }
+\DoxyCodeLine{679 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{680 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}{Graph<T>::longestPath}}(T st, T ta) \{}
+\DoxyCodeLine{681     std::stack<Vertex<T>*> stack;}
+\DoxyCodeLine{682     \textcolor{comment}{//set all as not visited}}
+\DoxyCodeLine{683     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* vertex: vertexSet)\{}
+\DoxyCodeLine{684         vertex-\/>visited = \textcolor{keyword}{false};}
+\DoxyCodeLine{685     \}}
+\DoxyCodeLine{686     \textcolor{comment}{//store topological sort}}
+\DoxyCodeLine{687     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* vertex: vertexSet)\{}
+\DoxyCodeLine{688         \textcolor{keywordflow}{if}(!(vertex-\/>visited)) topoSort(vertex-\/>info, stack);}
+\DoxyCodeLine{689     \}}
+\DoxyCodeLine{690 }
+\DoxyCodeLine{691     \textcolor{comment}{//set all distances to infinite}}
+\DoxyCodeLine{692     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* vertex: vertexSet)\{}
+\DoxyCodeLine{693         vertex-\/>dist = NINF;}
+\DoxyCodeLine{694     \}}
+\DoxyCodeLine{695     \mbox{\hyperlink{classVertex}{Vertex<T>}}* origin = findVertex(st);}
+\DoxyCodeLine{696     origin-\/>dist = 0;}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{698     \mbox{\hyperlink{classVertex}{Vertex<T>}}* dest;}
+\DoxyCodeLine{699     \textcolor{comment}{//process verteses in topological order}}
+\DoxyCodeLine{700     \textcolor{keywordflow}{while}(stack.size()>0)\{}
+\DoxyCodeLine{701         \mbox{\hyperlink{classVertex}{Vertex<T>}}* node = stack.top();}
+\DoxyCodeLine{702         stack.pop();}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{704         \textcolor{comment}{//adjacent}}
+\DoxyCodeLine{705         \textcolor{keywordflow}{if}(node-\/>dist != NINF)\{}
+\DoxyCodeLine{706             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge : node-\/>adj)\{}
+\DoxyCodeLine{707                 \textcolor{keywordflow}{if}(edge.flux != 0)\{}
+\DoxyCodeLine{708                     dest = edge.dest;}
+\DoxyCodeLine{709                     \textcolor{keywordflow}{if}(dest-\/>dist < node-\/>dist + edge.duration)\{}
+\DoxyCodeLine{710                         dest-\/>dist = node-\/>dist + edge.duration;}
+\DoxyCodeLine{711                         dest-\/>path = findVertex(node-\/>info);}
+\DoxyCodeLine{712                     \}}
+\DoxyCodeLine{713                 \}}
+\DoxyCodeLine{714             \}}
+\DoxyCodeLine{715         \}}
+\DoxyCodeLine{716     \}}
+\DoxyCodeLine{717     \mbox{\hyperlink{classVertex}{Vertex<T>}}* target = findVertex(ta);}
+\DoxyCodeLine{718     \textcolor{keywordflow}{return} target-\/>dist;}
+\DoxyCodeLine{719 \}}
+\DoxyCodeLine{720 }
+\DoxyCodeLine{724 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{725 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}{Graph<T>::topoSort}}(T st, std::stack<\mbox{\hyperlink{classVertex}{Vertex<T>}}*> \&stack) \{}
+\DoxyCodeLine{726     \mbox{\hyperlink{classVertex}{Vertex<T>}}* origin = findVertex(st);}
+\DoxyCodeLine{727     origin-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{728     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge : origin-\/>adj)\{}
+\DoxyCodeLine{729         \textcolor{keywordflow}{if}(!(edge.dest-\/>visited) \&\& (edge.flux != 0)) topoSort((edge.dest)-\/>info, stack);}
+\DoxyCodeLine{730     \}}
+\DoxyCodeLine{731     stack.push(origin);}
+\DoxyCodeLine{732 \}}
+\DoxyCodeLine{733 }
+\DoxyCodeLine{738 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{739 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a2931de4d06954374ee4724b5817133e1}{Graph<T>::vertexTime}}(T st, T ta) \{}
+\DoxyCodeLine{740     dijkstraShortestPath(st);}
+\DoxyCodeLine{741     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v : vertexSet)\{}
+\DoxyCodeLine{742         v-\/>et = v-\/>dist;}
+\DoxyCodeLine{743     \}}
+\DoxyCodeLine{744     longestPath(st, ta);}
+\DoxyCodeLine{745     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v : vertexSet)\{}
+\DoxyCodeLine{746         v-\/>lt = v-\/>dist;}
+\DoxyCodeLine{747     \}}
+\DoxyCodeLine{748 }
+\DoxyCodeLine{749     \textcolor{keywordtype}{int} maxD = 0;}
+\DoxyCodeLine{750     std::vector<T> biggest;}
+\DoxyCodeLine{751     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v : vertexSet)\{}
+\DoxyCodeLine{752         \textcolor{keywordflow}{if}(((v-\/>lt) -\/ (v-\/>et) != 0) \&\& ((v-\/>lt) > NINF) \&\& ((v-\/>et) != INF))\{}
+\DoxyCodeLine{753             std::cout << \textcolor{stringliteral}{"{}Vertex: "{}} << v-\/>info << \textcolor{stringliteral}{"{} Waiting: "{}} << (v-\/>lt) -\/ (v-\/>et) << std::endl;}
+\DoxyCodeLine{754             \textcolor{keywordflow}{if}((v-\/>lt) -\/ (v-\/>et) > maxD)\{}
+\DoxyCodeLine{755                 maxD = (v-\/>lt) -\/ (v-\/>et);}
+\DoxyCodeLine{756                 biggest.erase(biggest.begin(), biggest.end());}
+\DoxyCodeLine{757                 biggest.push\_back(v-\/>info);}
+\DoxyCodeLine{758             \}}
+\DoxyCodeLine{759             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}((v-\/>lt) -\/ (v-\/>et) == maxD)\{}
+\DoxyCodeLine{760                 biggest.push\_back(v-\/>info);}
+\DoxyCodeLine{761             \}}
+\DoxyCodeLine{762         \}}
+\DoxyCodeLine{763     \}}
+\DoxyCodeLine{764     std::cout << \textcolor{stringliteral}{"{}Biggest waiting time: "{}} << maxD << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{765     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} node : biggest)\{}
+\DoxyCodeLine{766         std::cout << \textcolor{stringliteral}{"{}Node: "{}} << node << \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{767     \}}
+\DoxyCodeLine{768 \}}
+\DoxyCodeLine{769 }
+\DoxyCodeLine{777 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{778 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a740b9faf9f19dd485602f67054154514}{Graph<T>::FindPathGivenGroupSize}}(T st, T ta, \textcolor{keywordtype}{int} groupSize) \{}
+\DoxyCodeLine{779     \mbox{\hyperlink{classVertex}{Vertex<T>}} origin(st);}
+\DoxyCodeLine{780     std::vector<T> path;}
+\DoxyCodeLine{781     std::vector<T> pathInfo;}
+\DoxyCodeLine{782     \textcolor{keywordtype}{int} resCap = INF;}
+\DoxyCodeLine{783     \mbox{\hyperlink{classGraph}{Graph<T>}} resGrid;}
+\DoxyCodeLine{784     std::map<vector<T>, T> printablePath;}
+\DoxyCodeLine{785 }
+\DoxyCodeLine{786 \textcolor{comment}{//    zeroFlux();}}
+\DoxyCodeLine{787     \textcolor{keywordflow}{for}(\mbox{\hyperlink{classVertex}{Vertex<T>}}* v: vertexSet)\{}
+\DoxyCodeLine{788         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < v-\/>adj.size(); i++)\{}
+\DoxyCodeLine{789             v-\/>adj[i].setFlux(0);}
+\DoxyCodeLine{790         \}}
+\DoxyCodeLine{791     \}}
+\DoxyCodeLine{792 }
+\DoxyCodeLine{793     resGrid = residualGrid();}
+\DoxyCodeLine{794     resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{795     path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{796 }
+\DoxyCodeLine{797     \textcolor{comment}{//while there is a path in the Residual Grid}}
+\DoxyCodeLine{798     \textcolor{keywordflow}{while}(groupSize != 0)\{}
+\DoxyCodeLine{799         resGrid = residualGrid();}
+\DoxyCodeLine{800         resGrid.unweightedShortestPath(st);}
+\DoxyCodeLine{801         path = resGrid.\mbox{\hyperlink{classGraph_ad9b10f45166faaa19879fca4e73b6f40}{getPath}}(st, ta);}
+\DoxyCodeLine{802         \textcolor{keywordflow}{if} (path.empty()) \{}
+\DoxyCodeLine{803             cout << \textcolor{stringliteral}{"{}Couldn't find a path for the whole group. The biggest possible group's path goes as follows:\(\backslash\)n"{}};}
+\DoxyCodeLine{804             \textcolor{keywordflow}{break};}
+\DoxyCodeLine{805         \}}
+\DoxyCodeLine{806 }
+\DoxyCodeLine{807         \textcolor{comment}{//find minimun Cf in path}}
+\DoxyCodeLine{808         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/1; i++)\{}
+\DoxyCodeLine{809             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} edge: (resGrid.findVertex(path[i]))-\/>adj)\{}
+\DoxyCodeLine{810                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{811                 \textcolor{keywordflow}{if}(edge.dest-\/>info == resGrid.findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{812                     resCap = std::min(edge.getWeight(), resCap);}
+\DoxyCodeLine{813                 \}}
+\DoxyCodeLine{814             \}}
+\DoxyCodeLine{815         \}}
+\DoxyCodeLine{816 }
+\DoxyCodeLine{817         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < path.size() -\/ 1; i++)\{}
+\DoxyCodeLine{818             \textcolor{keywordflow}{for}(\mbox{\hyperlink{classEdge}{Edge<T>}} \&edge: findVertex(path[i])-\/>adj)\{}
+\DoxyCodeLine{819                 \textcolor{comment}{//found the edge of the path}}
+\DoxyCodeLine{820                 \textcolor{keywordflow}{if}(edge.dest-\/>info == findVertex(path[i+1])-\/>info)\{}
+\DoxyCodeLine{821                     edge.setFlux(resCap + edge.getFlux());}
+\DoxyCodeLine{822                 \}}
+\DoxyCodeLine{823             \}}
+\DoxyCodeLine{824         \}}
+\DoxyCodeLine{825 }
+\DoxyCodeLine{826         \textcolor{keywordflow}{if} (resCap > groupSize) \{}
+\DoxyCodeLine{827             resCap = groupSize;}
+\DoxyCodeLine{828         \}}
+\DoxyCodeLine{829 }
+\DoxyCodeLine{830         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < path.size(); i++) \{}
+\DoxyCodeLine{831             pathInfo.push\_back(path[i]);}
+\DoxyCodeLine{832         \}}
+\DoxyCodeLine{833 }
+\DoxyCodeLine{834         \textcolor{keywordflow}{if} (printablePath.find(pathInfo) == printablePath.end()) \{}
+\DoxyCodeLine{835             printablePath.insert(std::pair<vector<int>, \textcolor{keywordtype}{int}>(pathInfo, resCap));}
+\DoxyCodeLine{836         \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{837             printablePath.find(pathInfo)-\/>second += resCap;}
+\DoxyCodeLine{838         \}}
+\DoxyCodeLine{839 }
+\DoxyCodeLine{840         pathInfo.erase(pathInfo.begin(), pathInfo.end());}
+\DoxyCodeLine{841 }
+\DoxyCodeLine{842         groupSize -\/= resCap;}
+\DoxyCodeLine{843     \}}
+\DoxyCodeLine{844 }
+\DoxyCodeLine{845     paths = printablePath;}
+\DoxyCodeLine{846 \}}
+\DoxyCodeLine{847 }
+\DoxyCodeLine{848 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{849 vector<vector<T>> \mbox{\hyperlink{classGraph}{Graph<T>::capacityOrEdges}}(T st, T ta) \{}
+\DoxyCodeLine{850     vector<T> bfsVec, maxCapVec;}
+\DoxyCodeLine{851     vector<vector<T>> res;}
+\DoxyCodeLine{852     \textcolor{keywordtype}{int} bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;}
+\DoxyCodeLine{853     unweightedShortestPath(st);}
+\DoxyCodeLine{854     bfsVec = getPath(st, ta);}
+\DoxyCodeLine{855     bfsEdges = bfsVec.size();}
+\DoxyCodeLine{856     \textcolor{keywordflow}{for}(T node: bfsVec)\{}
+\DoxyCodeLine{857         \mbox{\hyperlink{classVertex}{Vertex<T>}} * v = findVertex(node);}
+\DoxyCodeLine{858         bfsCap = std::min(bfsCap, v-\/>cap);}
+\DoxyCodeLine{859     \}}
+\DoxyCodeLine{860 }
+\DoxyCodeLine{861     maxCapCap = firstAlgorithm(st, ta);}
+\DoxyCodeLine{862     maxCapVec = getPath(st, ta);}
+\DoxyCodeLine{863     maxCapEdges = maxCapVec.size();}
+\DoxyCodeLine{864     \textcolor{keywordflow}{if}(bfsEdges == maxCapEdges \&\& bfsCap == maxCapCap)\{ \textcolor{comment}{//equal}}
+\DoxyCodeLine{865         res.push\_back(bfsVec);}
+\DoxyCodeLine{866         res.push\_back(maxCapVec);}
+\DoxyCodeLine{867     \}}
+\DoxyCodeLine{868     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(bfsEdges != maxCapEdges)\{ \textcolor{comment}{//diferent edges means bfs has less}}
+\DoxyCodeLine{869         \textcolor{keywordflow}{if}(bfsCap == maxCapCap)\{ \textcolor{comment}{//means bfs is better in edges and the same in cap}}
+\DoxyCodeLine{870             res.push\_back(bfsVec);}
+\DoxyCodeLine{871         \}}
+\DoxyCodeLine{872         \textcolor{keywordflow}{else}\{ \textcolor{comment}{//diferent cap means bfs is better in edges and maxCap is better in cap}}
+\DoxyCodeLine{873             res.push\_back(bfsVec);}
+\DoxyCodeLine{874             res.push\_back(maxCapVec);}
+\DoxyCodeLine{875         \}}
+\DoxyCodeLine{876     \}}
+\DoxyCodeLine{877     \textcolor{keywordflow}{else}\{ \textcolor{comment}{//equal edges means equals or maxCap is better}}
+\DoxyCodeLine{878         \textcolor{keywordflow}{if}(bfsCap == maxCapCap)\{ \textcolor{comment}{//bfs is better in edges and the same in cap}}
+\DoxyCodeLine{879             res.push\_back(bfsVec);}
+\DoxyCodeLine{880             res.push\_back(maxCapVec);}
+\DoxyCodeLine{881         \}}
+\DoxyCodeLine{882         \textcolor{keywordflow}{else}\{ \textcolor{comment}{//means maxCap has better cap and same edges as bfs so maxcap is better}}
+\DoxyCodeLine{883             res.push\_back(maxCapVec);}
+\DoxyCodeLine{884         \}}
+\DoxyCodeLine{885     \}}
+\DoxyCodeLine{886     \textcolor{keywordflow}{return} res;}
+\DoxyCodeLine{887 \}}
+\DoxyCodeLine{888 }
+\DoxyCodeLine{891 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{892 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ae667eecd89799c645634c0d78a3e98e6}{Graph<T>::printPath}}(map<vector<T>, T> printablePath)}
+\DoxyCodeLine{893  \{}
+\DoxyCodeLine{894     \textcolor{keywordflow}{if} (printablePath.empty()) \{}
+\DoxyCodeLine{895         cout << \textcolor{stringliteral}{"{}Seems like we've found no path!\(\backslash\)n"{}};}
+\DoxyCodeLine{896     \} \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{897         \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} x: printablePath) \{}
+\DoxyCodeLine{898             cout << x.second << \textcolor{stringliteral}{"{} subjects go through this path: "{}};}
+\DoxyCodeLine{899             \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} i: x.first) \{}
+\DoxyCodeLine{900                 cout << i << \textcolor{stringliteral}{"{}, "{}};}
+\DoxyCodeLine{901             \}}
+\DoxyCodeLine{902             cout << \textcolor{stringliteral}{"{}arrived."{}} << std::endl;}
+\DoxyCodeLine{903         \}}
+\DoxyCodeLine{904     \}}
+\DoxyCodeLine{905  \}}
+\DoxyCodeLine{906 }
+\DoxyCodeLine{910 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{911 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_a653077e6fdcea071088335aa4bc58a8c}{Graph<T>::paretoOptimalGroupSizeAndTransportShift}}(T origin, T target) \{}
+\DoxyCodeLine{912     vector<T> bfsVec, maxCapVec;}
+\DoxyCodeLine{913     vector<vector<T>> res;}
+\DoxyCodeLine{914     \textcolor{keywordtype}{int} bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;}
+\DoxyCodeLine{915     unweightedShortestPath(origin);}
+\DoxyCodeLine{916     bfsVec = getPath(origin, target);}
+\DoxyCodeLine{917     bfsEdges = bfsVec.size();}
+\DoxyCodeLine{918     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < bfsVec.size() -\/ 1; i++)\{}
+\DoxyCodeLine{919         \mbox{\hyperlink{classVertex}{Vertex<T>}} * v = findVertex(bfsVec[i]);}
+\DoxyCodeLine{920         \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} e : v-\/>adj) \{}
+\DoxyCodeLine{921             \textcolor{keywordflow}{if} (e.dest-\/>info == bfsVec[i+1]) \{}
+\DoxyCodeLine{922                 bfsCap = std::min(bfsCap, e.capacity);}
+\DoxyCodeLine{923             \}}
+\DoxyCodeLine{924         \}}
+\DoxyCodeLine{925     \}}
+\DoxyCodeLine{926 }
+\DoxyCodeLine{927     maxCapCap = firstAlgorithm(origin, target);}
+\DoxyCodeLine{928     maxCapVec = getPath(origin, target);}
+\DoxyCodeLine{929     maxCapEdges = maxCapVec.size();}
+\DoxyCodeLine{930 }
+\DoxyCodeLine{931     vector<int> empty;}
+\DoxyCodeLine{932     pair<vector<int>, \textcolor{keywordtype}{int}> bfsPath, maxCapPath;}
+\DoxyCodeLine{933 }
+\DoxyCodeLine{934     bfsPath.first = bfsVec;}
+\DoxyCodeLine{935     bfsPath.second = bfsCap;}
+\DoxyCodeLine{936 }
+\DoxyCodeLine{937     maxCapPath.first = maxCapVec;}
+\DoxyCodeLine{938     maxCapPath.second = maxCapCap;}
+\DoxyCodeLine{939 }
+\DoxyCodeLine{940     allVisitedFalse();}
+\DoxyCodeLine{941     recursivePathFinderLimited(origin, target, INF, bfsCap, maxCapEdges);}
+\DoxyCodeLine{942 }
+\DoxyCodeLine{943     paths.insert(bfsPath);}
+\DoxyCodeLine{944     paths.insert(maxCapPath);}
+\DoxyCodeLine{945 }
+\DoxyCodeLine{946     paths = filterPathsByDominance();}
+\DoxyCodeLine{947 \}}
+\DoxyCodeLine{948 }
+\DoxyCodeLine{955 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{956 \textcolor{keywordtype}{int} \mbox{\hyperlink{classGraph_a67752a8ed6c82965ab0109769010d33a}{Graph<T>::recursivePathFinderLimited}}(T current, T target, \textcolor{keywordtype}{int} currentCap, \textcolor{keywordtype}{int} bfsCap, \textcolor{keywordtype}{int} maxCapEdges) \{}
+\DoxyCodeLine{957     \textcolor{keywordflow}{if} (findVertex(current)-\/>visited) \{}
+\DoxyCodeLine{958         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{959     \}}
+\DoxyCodeLine{960     findVertex(current)-\/>visited = \textcolor{keyword}{true};}
+\DoxyCodeLine{961     mutatingPath.push\_back(current);}
+\DoxyCodeLine{962     \textcolor{keywordflow}{if} (current == target) \{}
+\DoxyCodeLine{963         pair<vector<int>, \textcolor{keywordtype}{int}> res;}
+\DoxyCodeLine{964         res.first = mutatingPath;}
+\DoxyCodeLine{965         res.second = currentCap;}
+\DoxyCodeLine{966         paths.insert(res);}
+\DoxyCodeLine{967         findVertex(current)-\/>visited = \textcolor{keyword}{false};}
+\DoxyCodeLine{968         mutatingPath.pop\_back();}
+\DoxyCodeLine{969         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{970     \}}
+\DoxyCodeLine{971     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} e : findVertex(current)-\/>adj) \{}
+\DoxyCodeLine{972         \textcolor{keywordflow}{if} (e.capacity > bfsCap \&\& mutatingPath.size() < maxCapEdges) \{}
+\DoxyCodeLine{973             recursivePathFinderLimited(e.dest-\/>info, target, std::min(currentCap, e.capacity), bfsCap, maxCapEdges);}
+\DoxyCodeLine{974         \}}
+\DoxyCodeLine{975     \}}
+\DoxyCodeLine{976     mutatingPath.pop\_back();}
+\DoxyCodeLine{977     findVertex(current)-\/>visited = \textcolor{keyword}{false};}
+\DoxyCodeLine{978     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{979 \}}
+\DoxyCodeLine{980 }
+\DoxyCodeLine{982 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{983 map<vector<int>, \textcolor{keywordtype}{int}> \mbox{\hyperlink{classGraph_aeb0fe13c3c612eaf2efab2043f29196b}{Graph<T>::filterPathsByDominance}}() \{}
+\DoxyCodeLine{984     map<vector<int>, \textcolor{keywordtype}{int}> filtered;}
+\DoxyCodeLine{985     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} path : paths) \{}
+\DoxyCodeLine{986         \textcolor{keywordtype}{bool} dominated = \textcolor{keyword}{false};}
+\DoxyCodeLine{987         \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} path2 : paths) \{}
+\DoxyCodeLine{988             \textcolor{keywordflow}{if} ((path2.first.size() < path.first.size() \&\& path2.second >= path.second) ||}
+\DoxyCodeLine{989                     (path2.second > path.second \&\& path2.first.size() <= path.first.size())) \{}
+\DoxyCodeLine{990                 dominated = \textcolor{keyword}{true};}
+\DoxyCodeLine{991             \}}
+\DoxyCodeLine{992         \}}
+\DoxyCodeLine{993         \textcolor{keywordflow}{if} (!dominated) \{}
+\DoxyCodeLine{994             filtered.insert(path);}
+\DoxyCodeLine{995         \}}
+\DoxyCodeLine{996     \}}
+\DoxyCodeLine{997     \textcolor{keywordflow}{return} filtered;}
+\DoxyCodeLine{998 \}}
+\DoxyCodeLine{999 }
+\DoxyCodeLine{1001 \textcolor{keyword}{template}<\textcolor{keyword}{class} T>}
+\DoxyCodeLine{1002 \textcolor{keywordtype}{void} \mbox{\hyperlink{classGraph_ada3eeca97dce09fe05586c762834c6c7}{Graph<T>::allVisitedFalse}}() \{}
+\DoxyCodeLine{1003     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} v : vertexSet) \{}
+\DoxyCodeLine{1004         v-\/>visited = \textcolor{keyword}{false};}
+\DoxyCodeLine{1005     \}}
+\DoxyCodeLine{1006 \}}
+\DoxyCodeLine{1007 }
+\DoxyCodeLine{1008 }
+\DoxyCodeLine{1009 }
+\DoxyCodeLine{1010 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* GRAPH\_H\_ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,102 @@
+\hypertarget{classMenu}{}\doxysection{Menu Class Reference}
+\label{classMenu}\index{Menu@{Menu}}
+
+
+Collaboration diagram for Menu\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classMenu_a0468e80f26dfd5d9d5f6d9fa68d91cd3}\label{classMenu_a0468e80f26dfd5d9d5f6d9fa68d91cd3}} 
+void {\bfseries run\+Select\+Origin} ()
+\begin{DoxyCompactList}\small\item\em This method starts the menu loop by querying the user a origin node. It repeats until the user input a valid node. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMenu_a57b5c04ff3cfab798e2dfd46209128a5}{run\+Select\+Target}} ()
+\item 
+int \mbox{\hyperlink{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}{run\+Initial}} ()
+\item 
+int \mbox{\hyperlink{classMenu_a27090380b461c66932dc86196eab6c83}{run\+First}} ()
+\item 
+int \mbox{\hyperlink{classMenu_a11fd0dbd05282fd15f34deffabc4f470}{run\+Second}} ()
+\item 
+int \mbox{\hyperlink{classMenu_aa5498c42014d64f1016a0d700d653f77}{run\+After\+Second}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}{int\+Input}} (int min, int max)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classMenu_a70779a3f4f65cf3acc2ff61fbd25bf80}\label{classMenu_a70779a3f4f65cf3acc2ff61fbd25bf80}} 
+\mbox{\hyperlink{classGraph}{Graph}}$<$ int $>$ {\bfseries graph}
+\item 
+\mbox{\Hypertarget{classMenu_a5c52cc98695ca63b70cb3b758e6dcb3f}\label{classMenu_a5c52cc98695ca63b70cb3b758e6dcb3f}} 
+int {\bfseries origin} = 0
+\item 
+\mbox{\Hypertarget{classMenu_a40006e912a52314c7b4c55ba963700d2}\label{classMenu_a40006e912a52314c7b4c55ba963700d2}} 
+int {\bfseries target} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}\label{classMenu_a76fcb0fdd15e5a7ce88b3121f17a3579}} 
+\index{Menu@{Menu}!intInput@{intInput}}
+\index{intInput@{intInput}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{intInput()}{intInput()}}
+{\footnotesize\ttfamily static int Menu\+::int\+Input (\begin{DoxyParamCaption}\item[{int}]{min,  }\item[{int}]{max }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+This method queries the user for input until it receives a valid integer input 
+\begin{DoxyParams}{Parameters}
+{\em max} & denotes the maximum integer, included, to be considered a valid input \\
+\hline
+{\em min} & denotes the minimum integer, included, to be considered a valid input \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classMenu_aa5498c42014d64f1016a0d700d653f77}\label{classMenu_aa5498c42014d64f1016a0d700d653f77}} 
+\index{Menu@{Menu}!runAfterSecond@{runAfterSecond}}
+\index{runAfterSecond@{runAfterSecond}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{runAfterSecond()}{runAfterSecond()}}
+{\footnotesize\ttfamily int Menu\+::run\+After\+Second (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This method essentially queries the user if we want to call any algorithm that depended on previous algorithm calls. \begin{DoxyReturn}{Returns}
+an integer representing either the menu flow has ended (0) or not (1). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMenu_a27090380b461c66932dc86196eab6c83}\label{classMenu_a27090380b461c66932dc86196eab6c83}} 
+\index{Menu@{Menu}!runFirst@{runFirst}}
+\index{runFirst@{runFirst}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{runFirst()}{runFirst()}}
+{\footnotesize\ttfamily int Menu\+::run\+First (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This method queries the user essentially which algorithm to call upon the read graphic, knowing the group cannot be separated. \begin{DoxyReturn}{Returns}
+an integer representing either the menu flow has ended (0) or not (1). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}\label{classMenu_a16bbe16d320f0534e0dc491473b5b0d0}} 
+\index{Menu@{Menu}!runInitial@{runInitial}}
+\index{runInitial@{runInitial}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{runInitial()}{runInitial()}}
+{\footnotesize\ttfamily int Menu\+::run\+Initial (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This method queries the user if the group can be separated or not, which is a key idea to divide the algorithms. \begin{DoxyReturn}{Returns}
+an integer representing either the menu flow has ended (0) or not (1). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMenu_a11fd0dbd05282fd15f34deffabc4f470}\label{classMenu_a11fd0dbd05282fd15f34deffabc4f470}} 
+\index{Menu@{Menu}!runSecond@{runSecond}}
+\index{runSecond@{runSecond}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{runSecond()}{runSecond()}}
+{\footnotesize\ttfamily int Menu\+::run\+Second (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This method queries the user essentially which algorithm to call upon the read graphic, knowing the group can be separated. \begin{DoxyReturn}{Returns}
+an integer representing either the menu flow has ended (0) or not (1). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMenu_a57b5c04ff3cfab798e2dfd46209128a5}\label{classMenu_a57b5c04ff3cfab798e2dfd46209128a5}} 
+\index{Menu@{Menu}!runSelectTarget@{runSelectTarget}}
+\index{runSelectTarget@{runSelectTarget}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{runSelectTarget()}{runSelectTarget()}}
+{\footnotesize\ttfamily void Menu\+::run\+Select\+Target (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+This method is called after the select origin method, querying the user for an integer input representing a node and repeating the query until the user inputs a valid node. The menu loop is properly started here, repeatedly calling the run\+Initial method until it returns 0. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{Menu_8h}{Menu.\+h}}\end{DoxyCompactItemize}
