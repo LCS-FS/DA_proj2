@@ -140,7 +140,7 @@ public:
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-    std::map<vector<T>, T> FindPathGivenGroupSize(T st, T ta, int groupSize);
+    void FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     int firstAlgorithm(T start, T end);
@@ -464,13 +464,20 @@ int Graph<T>::edmondKarpFlux(T st, T ta) {
             }
         }
 
-        for(int i = 0; i < path.size() -1; i++){
+        for(int i = 0; i < path.size() - 1; i++){
             for(Edge<T> &edge: findVertex(path[i])->adj){
                 //found the edge of the path
                 if(edge.dest->info == findVertex(path[i+1])->info){
                     edge.setFlux(resCap + edge.getFlux());
                 }
             }
+        }
+
+        pair<vector<T>, int> res;
+        res.first = path;
+        res.second = resCap;
+        if (!paths.insert(res).second) {
+            paths.find(path)->second += resCap;
         }
 
         //determine residual grid
@@ -570,6 +577,13 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
             }
         }
 
+        pair<vector<T>, int> res;
+        res.first = path;
+        res.second = resCap;
+        if (!paths.insert(res).second) {
+            paths.find(path)->second += resCap;
+        }
+
         //determine residual grid
         resGrid = residualGrid();
         resGrid.unweightedShortestPath(st);
@@ -645,6 +659,8 @@ int Graph<T>::firstAlgorithm(T start, T end) {
         vertex = findVertex(info);
         mincap = std::min(mincap, vertex->cap);
     }
+
+
 
     return mincap;
 }
@@ -759,7 +775,7 @@ void Graph<T>::vertexTime(T st, T ta) {
 ///\param groupSize desired group size
 ///@return map of the paths the group should take
 template<class T>
-std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
+void Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
     Vertex<T> origin(st);
     std::vector<T> path;
     std::vector<T> pathInfo;
@@ -826,13 +842,9 @@ std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSiz
         groupSize -= resCap;
     }
 
-    return printablePath;
+    paths = printablePath;
 }
-///Calculates best paths for a unsplittable group based on capacity and number of nodes
-///If multiple paths aren't better than the others in both capacity and number of nodes, all of them are returned
-///\param st number associated with start vertex
-///\param ta number associated with target vertex
-///@return vector of paths as a vector of nodes T
+
 template<class T>
 vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
     vector<T> bfsVec, maxCapVec;
@@ -879,13 +891,17 @@ vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
 template<class T>
 void Graph<T>::printPath(map<vector<T>, T> printablePath)
  {
-     for (auto x : printablePath) {
-         cout << x.second << " subjects go through this path: ";
-         for (auto i : x.first) {
-             cout << i << ", ";
-         }
-         cout << "arrived." << std::endl;
-     }
+    if (printablePath.empty()) {
+        cout << "Seems like we've found no path!\n";
+    } else {
+        for (auto x: printablePath) {
+            cout << x.second << " subjects go through this path: ";
+            for (auto i: x.first) {
+                cout << i << ", ";
+            }
+            cout << "arrived." << std::endl;
+        }
+    }
  }
 
 ///Sets the paths field to be all the pareto-optimal solutions (paths) from origin to target nodes
