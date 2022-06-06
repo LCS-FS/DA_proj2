@@ -131,6 +131,8 @@ private:
     int findVertexIdx(const T &in) const;
 
 public:
+    map<vector<T>, int> paths;
+    vector<T> mutatingPath;
     ~Graph();
     void printPath(std::map<vector<T>, T> printablePath); // prints a string meaning n subjects go through path
     Vertex<T> *findVertex(const T &in) const;
@@ -138,14 +140,16 @@ public:
     bool addEdge(const T &sourc, const T &dest, int d, int c, int w);
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
-    std::map<vector<T>, T> FindPathGivenGroupSize(T st, T ta, int groupSize);
+    void FindPathGivenGroupSize(T st, T ta, int groupSize);
     int getNumberNodes() const;
     int getNumberEdges() const;
     int firstAlgorithm(T start, T end);
     bool heapComp(const Vertex<T>* v1,const Vertex<T>* v2) const;
     void setNumberNodes(int numberNodes);
     void setNumberEdges(int numberEdges);
-
+    void paretoOptimalGroupSizeAndTransportShift(T origin, T target);
+    int recursivePathFinderLimited(T current, T target, int currentCap, int bfsCap, int maxCapEdges);
+    void allVisitedFalse();
     // Single-source shortest path - Greedy
     void dijkstraShortestPath(const T &s);
     void unweightedShortestPath(const T &s);
@@ -172,6 +176,7 @@ public:
 
     void vertexTime(T st, T ta);
     vector<vector<T>> capacityOrEdges(T st, T ta);
+    map<vector<int>, int> filterPathsByDominance();
 };
 
 template<class T>
@@ -459,13 +464,20 @@ int Graph<T>::edmondKarpFlux(T st, T ta) {
             }
         }
 
-        for(int i = 0; i < path.size() -1; i++){
+        for(int i = 0; i < path.size() - 1; i++){
             for(Edge<T> &edge: findVertex(path[i])->adj){
                 //found the edge of the path
                 if(edge.dest->info == findVertex(path[i+1])->info){
                     edge.setFlux(resCap + edge.getFlux());
                 }
             }
+        }
+
+        pair<vector<T>, int> res;
+        res.first = path;
+        res.second = resCap;
+        if (!paths.insert(res).second) {
+            paths.find(path)->second += resCap;
         }
 
         //determine residual grid
@@ -565,6 +577,13 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
             }
         }
 
+        pair<vector<T>, int> res;
+        res.first = path;
+        res.second = resCap;
+        if (!paths.insert(res).second) {
+            paths.find(path)->second += resCap;
+        }
+
         //determine residual grid
         resGrid = residualGrid();
         resGrid.unweightedShortestPath(st);
@@ -586,6 +605,7 @@ int Graph<T>::increaseGroupSize(T st, T ta, int inc) {
 
 ///Prints the caracteristics of all edges in the graph
 ///Show origin, destination, flux and capacity
+/*
 template<class T>
 void Graph<T>::printGraph(){
     std::set<std::pair<int, int>> printed;
@@ -600,7 +620,7 @@ void Graph<T>::printGraph(){
             }
         }
     }
-}
+}*/
 ///Computes the highest capacity path in the graph
 ///Works for unseperable groups
 ///Based on the algorithm for higest capacity path in the theory slides
@@ -639,6 +659,8 @@ int Graph<T>::firstAlgorithm(T start, T end) {
         vertex = findVertex(info);
         mincap = std::min(mincap, vertex->cap);
     }
+
+
 
     return mincap;
 }
@@ -753,7 +775,7 @@ void Graph<T>::vertexTime(T st, T ta) {
 ///\param groupSize desired group size
 ///@return map of the paths the group should take
 template<class T>
-std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
+void Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSize) {
     Vertex<T> origin(st);
     std::vector<T> path;
     std::vector<T> pathInfo;
@@ -778,6 +800,7 @@ std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSiz
         resGrid.unweightedShortestPath(st);
         path = resGrid.getPath(st, ta);
         if (path.empty()) {
+            cout << "Couldn't find a path for the whole group. The biggest possible group's path goes as follows:\n";
             break;
         }
 
@@ -819,13 +842,9 @@ std::map<vector<T>, T> Graph<T>::FindPathGivenGroupSize(T st, T ta, int groupSiz
         groupSize -= resCap;
     }
 
-    return printablePath;
+    paths = printablePath;
 }
-///Calculates best paths for a unsplittable group based on capacity and number of nodes
-///If multiple paths aren't better than the others in both capacity and number of nodes, all of them are returned
-///\param st number associated with start vertex
-///\param ta number associated with target vertex
-///@return vector of paths as a vector of nodes T
+
 template<class T>
 vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
     vector<T> bfsVec, maxCapVec;
@@ -872,12 +891,120 @@ vector<vector<T>> Graph<T>::capacityOrEdges(T st, T ta) {
 template<class T>
 void Graph<T>::printPath(map<vector<T>, T> printablePath)
  {
-     for (auto x : printablePath) {
-         cout << x.second << " subjects go through this path: ";
-         for (auto i : x.first) {
-             cout << i << ", ";
-         }
-         cout << "arrived." << std::endl;
-     }
+    if (printablePath.empty()) {
+        cout << "Seems like we've found no path!\n";
+    } else {
+        for (auto x: printablePath) {
+            cout << x.second << " subjects go through this path: ";
+            for (auto i: x.first) {
+                cout << i << ", ";
+            }
+            cout << "arrived." << std::endl;
+        }
+    }
  }
+
+///Sets the paths field to be all the pareto-optimal solutions (paths) from origin to target nodes
+///\param origin is the origin node
+///\param target is the target node
+template<class T>
+void Graph<T>::paretoOptimalGroupSizeAndTransportShift(T origin, T target) {
+    vector<T> bfsVec, maxCapVec;
+    vector<vector<T>> res;
+    int bfsEdges, maxCapEdges, bfsCap=INF, maxCapCap;
+    unweightedShortestPath(origin);
+    bfsVec = getPath(origin, target);
+    bfsEdges = bfsVec.size();
+    for(int i = 0; i < bfsVec.size() - 1; i++){
+        Vertex<T> * v = findVertex(bfsVec[i]);
+        for (auto e : v->adj) {
+            if (e.dest->info == bfsVec[i+1]) {
+                bfsCap = std::min(bfsCap, e.capacity);
+            }
+        }
+    }
+
+    maxCapCap = firstAlgorithm(origin, target);
+    maxCapVec = getPath(origin, target);
+    maxCapEdges = maxCapVec.size();
+
+    vector<int> empty;
+    pair<vector<int>, int> bfsPath, maxCapPath;
+
+    bfsPath.first = bfsVec;
+    bfsPath.second = bfsCap;
+
+    maxCapPath.first = maxCapVec;
+    maxCapPath.second = maxCapCap;
+
+    allVisitedFalse();
+    recursivePathFinderLimited(origin, target, INF, bfsCap, maxCapEdges);
+
+    paths.insert(bfsPath);
+    paths.insert(maxCapPath);
+
+    paths = filterPathsByDominance();
+}
+
+///This function performs a recursive DFS on the graph looking for all simple paths from origin to target that are within the "pareto-optimal" limitations defined by the paretoOptimal method above.
+///\param bfsCap the minimum capacity limitation for a valid path to be explored
+///\param maxCapEdges the maximum path size for exploration worth
+///\param currentCap keeps the lesser edge capacity found during the path exploration, meaning the capacity that path can transport
+///\param current the current node from where the path will be searched for
+///\param target the target node for the path
+template<class T>
+int Graph<T>::recursivePathFinderLimited(T current, T target, int currentCap, int bfsCap, int maxCapEdges) {
+    if (findVertex(current)->visited) {
+        return 0;
+    }
+    findVertex(current)->visited = true;
+    mutatingPath.push_back(current);
+    if (current == target) {
+        pair<vector<int>, int> res;
+        res.first = mutatingPath;
+        res.second = currentCap;
+        paths.insert(res);
+        findVertex(current)->visited = false;
+        mutatingPath.pop_back();
+        return 0;
+    }
+    for (auto e : findVertex(current)->adj) {
+        if (e.capacity > bfsCap && mutatingPath.size() < maxCapEdges) {
+            recursivePathFinderLimited(e.dest->info, target, std::min(currentCap, e.capacity), bfsCap, maxCapEdges);
+        }
+    }
+    mutatingPath.pop_back();
+    findVertex(current)->visited = false;
+    return 0;
+}
+
+///Filters paths on the paths field of the graph to exclude paths that are dominated by others in terms of capacity and path size
+template<class T>
+map<vector<int>, int> Graph<T>::filterPathsByDominance() {
+    map<vector<int>, int> filtered;
+    for (auto path : paths) {
+        bool dominated = false;
+        for (auto path2 : paths) {
+            if ((path2.first.size() < path.first.size() && path2.second >= path.second) ||
+                    (path2.second > path.second && path2.first.size() <= path.first.size())) {
+                dominated = true;
+            }
+        }
+        if (!dominated) {
+            filtered.insert(path);
+        }
+    }
+    return filtered;
+}
+
+///Sets all nodes from the graph to not visited
+template<class T>
+void Graph<T>::allVisitedFalse() {
+    for (auto v : vertexSet) {
+        v->visited = false;
+    }
+}
+
+
+
 #endif /* GRAPH_H_ */
