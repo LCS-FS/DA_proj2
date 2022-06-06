@@ -22,8 +22,7 @@ int main() {
         menu = Menu();
     }
     cout << "Files loaded\n";
-
-    menu.graph.paretoOptimalGroupSizeAndTransportShift(1, 6);
+    menu.graph.paretoOptimalGroupSizeAndTransportShift(1, 90);
 
     for (auto path : menu.graph.paths) {
         for (auto i : path.first) {
@@ -31,6 +30,8 @@ int main() {
         }
         cout << "arrived transporting " << path.second << " subjects." << endl;
     }
+
+    menu.graph.countEdges();
 
 //    cout << graph.edmondKarpFlux(1, 5000) << endl;
 //    cout << graph.edmondKarpFlux(1, 50) << endl;
