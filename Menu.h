@@ -16,7 +16,9 @@ public:
     int origin = 0;
     int target = 0;
 
-    ///This method
+    ///This method queries the user for input until it receives a valid integer input
+    ///\param max denotes the maximum integer, included, to be considered a valid input
+    ///\param min denotes the minimum integer, included, to be considered a valid input
     static int intInput(int min, int max) {
         string input;
         int output;
@@ -39,6 +41,7 @@ public:
         return output;
     }
 
+    ///This method starts the menu loop by querying the user a origin node. It repeats until the user input a valid node.
     void runSelectOrigin() {
         cout << "Welcome to the Path Finder! Your algorithmic interface to find best paths through"
                 " Graph data structures :)\n"
@@ -55,6 +58,9 @@ public:
         runSelectTarget();
     }
 
+    ///This method is called after the select origin method, querying the user for an integer input representing a node
+    /// and repeating the query until the user inputs a valid node. The menu loop is properly started here, repeatedly
+    /// calling the runInitial method until it returns 0.
     void runSelectTarget() {
         cout << "Great, now let's select our target destination. (Input the integer representing the node)\n";
         bool repeat;
@@ -70,6 +76,8 @@ public:
         while (runInitial());
     }
 
+    ///This method queries the user if the group can be separated or not, which is a key idea to divide the algorithms.
+    ///\returns an integer representing either the menu flow has ended (0) or not (1).
     int runInitial() {
         cout << "Ok, now an important matter for us to analyse the best path:\n"
                 "Can the group being transported be separated?\n"
@@ -93,6 +101,8 @@ public:
         return 1;
     }
 
+    ///This method queries the user essentially which algorithm to call upon the read graphic, knowing the group cannot be separated.
+    ///\returns an integer representing either the menu flow has ended (0) or not (1).
     int runFirst() {
         graph.paths.clear();
         cout << "Ok! Now that we know that groups can't be separated, "
@@ -128,6 +138,8 @@ public:
         return 1;
     }
 
+    ///This method queries the user essentially which algorithm to call upon the read graphic, knowing the group can be separated.
+    ///\returns an integer representing either the menu flow has ended (0) or not (1).
     int runSecond() {
         graph.paths.clear();
         int groupSize;
@@ -163,9 +175,11 @@ public:
         return 0;
     }
 
+    ///This method essentially queries the user if we want to call any algorithm that depended on previous algorithm calls.
+    ///\returns an integer representing either the menu flow has ended (0) or not (1).
     int runAfterSecond() {
         int increase;
-        cout << "Ok, now by the end of the last algorithm, we can work some mor options, if you wish.\n";
+        cout << "Ok, now by the end of the last algorithm, we can work some more options, if you wish.\n";
         cout << "1 - Correct a pathing due to an increase of a given group size (2.2)\n"
                 "2 - Tell the soonest possible time the group would reunite in destination (2.4)\n"
                 "3 - Assuming everybody leaves from the same place and time, what would "
