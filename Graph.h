@@ -131,7 +131,6 @@ private:
     int findVertexIdx(const T &in) const;
 
 public:
-    void countEdges();
     map<vector<T>, int> paths;
     vector<T> mutatingPath;
     ~Graph();
@@ -889,7 +888,9 @@ void Graph<T>::printPath(map<vector<T>, T> printablePath)
      }
  }
 
-
+///Sets the paths field to be all the pareto-optimal solutions (paths) from origin to target nodes
+///\param origin is the origin node
+///\param target is the target node
 template<class T>
 void Graph<T>::paretoOptimalGroupSizeAndTransportShift(T origin, T target) {
     vector<T> bfsVec, maxCapVec;
@@ -929,6 +930,12 @@ void Graph<T>::paretoOptimalGroupSizeAndTransportShift(T origin, T target) {
     paths = filterPathsByDominance();
 }
 
+///This function performs a recursive DFS on the graph looking for all simple paths from origin to target that are within the "pareto-optimal" limitations defined by the paretoOptimal method above.
+///\param bfsCap the minimum capacity limitation for a valid path to be explored
+///\param maxCapEdges the maximum path size for exploration worth
+///\param currentCap keeps the lesser edge capacity found during the path exploration, meaning the capacity that path can transport
+///\param current the current node from where the path will be searched for
+///\param target the target node for the path
 template<class T>
 int Graph<T>::recursivePathFinderLimited(T current, T target, int currentCap, int bfsCap, int maxCapEdges) {
     if (findVertex(current)->visited) {
@@ -955,6 +962,7 @@ int Graph<T>::recursivePathFinderLimited(T current, T target, int currentCap, in
     return 0;
 }
 
+///Filters paths on the paths field of the graph to exclude paths that are dominated by others in terms of capacity and path size
 template<class T>
 map<vector<int>, int> Graph<T>::filterPathsByDominance() {
     map<vector<int>, int> filtered;
@@ -973,6 +981,7 @@ map<vector<int>, int> Graph<T>::filterPathsByDominance() {
     return filtered;
 }
 
+///Sets all nodes from the graph to not visited
 template<class T>
 void Graph<T>::allVisitedFalse() {
     for (auto v : vertexSet) {
@@ -980,16 +989,6 @@ void Graph<T>::allVisitedFalse() {
     }
 }
 
-template<class T>
-void Graph<T>::countEdges() {
-    int count = 0;
-    for (auto v : vertexSet) {
-        for (auto e : v->adj) {
-            count++;
-        }
-    }
-    cout << count;
-}
 
 
 #endif /* GRAPH_H_ */
