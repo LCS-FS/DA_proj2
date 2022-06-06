@@ -1,7 +1,5 @@
-//
-// Created by jpdat on 04-06-2022.
-//
-
+///\file
+///Menu functions
 #ifndef PROJ2_MENU_H
 #define PROJ2_MENU_H
 

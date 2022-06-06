@@ -1,4 +1,4 @@
-\hypertarget{classGraph}{}\doxysection{Graph$<$ T $>$ Class Template Reference}
+\hypertarget{classGraph}{}\doxysection{Graph\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
 \label{classGraph}\index{Graph$<$ T $>$@{Graph$<$ T $>$}}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -20,7 +20,7 @@ int {\bfseries get\+Num\+Vertex} () const
 \mbox{\Hypertarget{classGraph_a41624b03fcb6bd29e4df574a1ec58541}\label{classGraph_a41624b03fcb6bd29e4df574a1ec58541}} 
 std\+::vector$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ T $>$ $\ast$ $>$ {\bfseries get\+Vertex\+Set} () const
 \item 
-std\+::map$<$ vector$<$ int $>$, int $>$ \mbox{\hyperlink{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}{Find\+Path\+Given\+Group\+Size}} (T st, T ta, int group\+Size)
+void \mbox{\hyperlink{classGraph_a740b9faf9f19dd485602f67054154514}{Find\+Path\+Given\+Group\+Size}} (T st, T ta, int group\+Size)
 \item 
 \mbox{\Hypertarget{classGraph_a201f3f5fbf9510184e30712879e33429}\label{classGraph_a201f3f5fbf9510184e30712879e33429}} 
 int {\bfseries get\+Number\+Nodes} () const
@@ -39,6 +39,13 @@ void {\bfseries set\+Number\+Nodes} (int number\+Nodes)
 \mbox{\Hypertarget{classGraph_a13d2221f4ea01d570bcb05455b7413d2}\label{classGraph_a13d2221f4ea01d570bcb05455b7413d2}} 
 void {\bfseries set\+Number\+Edges} (int number\+Edges)
 \item 
+void \mbox{\hyperlink{classGraph_a653077e6fdcea071088335aa4bc58a8c}{pareto\+Optimal\+Group\+Size\+And\+Transport\+Shift}} (T origin, T target)
+\item 
+int \mbox{\hyperlink{classGraph_a67752a8ed6c82965ab0109769010d33a}{recursive\+Path\+Finder\+Limited}} (T current, T target, int current\+Cap, int bfs\+Cap, int max\+Cap\+Edges)
+\item 
+\mbox{\Hypertarget{classGraph_ada3eeca97dce09fe05586c762834c6c7}\label{classGraph_ada3eeca97dce09fe05586c762834c6c7}} 
+void {\bfseries all\+Visited\+False} ()
+\begin{DoxyCompactList}\small\item\em Sets all nodes from the graph to not visited. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classGraph_a445a38cf4045797198eae2b818b602de}\label{classGraph_a445a38cf4045797198eae2b818b602de}} 
 void {\bfseries dijkstra\+Shortest\+Path} (const T \&s)
 \item 
@@ -61,7 +68,7 @@ int \mbox{\hyperlink{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}{edmond\+Karp\
 \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$ \mbox{\hyperlink{classGraph_aa167310b94b212c2c924f4c68038c7e4}{residual\+Grid}} ()
 \item 
 \mbox{\Hypertarget{classGraph_a5c657f3051db9c08b79239622a495b58}\label{classGraph_a5c657f3051db9c08b79239622a495b58}} 
-void \mbox{\hyperlink{classGraph_a5c657f3051db9c08b79239622a495b58}{zero\+Flux}} ()
+void {\bfseries zero\+Flux} ()
 \begin{DoxyCompactList}\small\item\em Sets flux of every edge on the graph to zero. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classGraph_a6b92cb0e86110b54cdb991a2ac4ae4ab}{increase\+Group\+Size}} (T st, T ta, int inc)
 \item 
@@ -72,32 +79,29 @@ void \mbox{\hyperlink{classGraph_ab08eff19f4f9621ca212a0aea7c9a6cc}{topo\+Sort}}
 \item 
 int \mbox{\hyperlink{classGraph_a242445b60bd1f6c5ee2fe5cf8dd23633}{longest\+Path}} (T st, T ta)
 \item 
-void \mbox{\hyperlink{classGraph_afd5c29368e4760b0b9a81d4967187775}{print\+Graph}} ()
+\mbox{\Hypertarget{classGraph_afd5c29368e4760b0b9a81d4967187775}\label{classGraph_afd5c29368e4760b0b9a81d4967187775}} 
+void {\bfseries print\+Graph} ()
 \item 
 void \mbox{\hyperlink{classGraph_a2931de4d06954374ee4724b5817133e1}{vertex\+Time}} (T st, T ta)
 \item 
-vector$<$ vector$<$ T $>$ $>$ \mbox{\hyperlink{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}{capacity\+Or\+Edges}} (T st, T ta)
+\mbox{\Hypertarget{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}\label{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}} 
+vector$<$ vector$<$ T $>$ $>$ {\bfseries capacity\+Or\+Edges} (T st, T ta)
+\item 
+\mbox{\Hypertarget{classGraph_aeb0fe13c3c612eaf2efab2043f29196b}\label{classGraph_aeb0fe13c3c612eaf2efab2043f29196b}} 
+map$<$ vector$<$ int $>$, int $>$ {\bfseries filter\+Paths\+By\+Dominance} ()
+\begin{DoxyCompactList}\small\item\em Filters paths on the paths field of the graph to exclude paths that are dominated by others in terms of capacity and path size. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classGraph_a9b383b6b265333441e1ca1deceeb994a}\label{classGraph_a9b383b6b265333441e1ca1deceeb994a}} 
+map$<$ vector$<$ T $>$, int $>$ {\bfseries paths}
+\item 
+\mbox{\Hypertarget{classGraph_ae32818c0c4a8a845489fc51c58ed1653}\label{classGraph_ae32818c0c4a8a845489fc51c58ed1653}} 
+vector$<$ T $>$ {\bfseries mutating\+Path}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}\label{classGraph_acdb711e6e2ff8c3f476dfeb0025519ab}} 
-\index{Graph$<$ T $>$@{Graph$<$ T $>$}!capacityOrEdges@{capacityOrEdges}}
-\index{capacityOrEdges@{capacityOrEdges}!Graph$<$ T $>$@{Graph$<$ T $>$}}
-\doxysubsubsection{\texorpdfstring{capacityOrEdges()}{capacityOrEdges()}}
-{\footnotesize\ttfamily template$<$class T $>$ \\
-vector$<$ vector$<$ T $>$ $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::capacity\+Or\+Edges (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta }\end{DoxyParamCaption})}
-
-Calculates best paths for a unsplittable group based on capacity and number of nodes If multiple paths aren\textquotesingle{}t better than the others in both capacity and number of nodes, all of them are returned 
-\begin{DoxyParams}{Parameters}
-{\em st} & number associated with start vertex \\
-\hline
-{\em ta} & number associated with target vertex \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-vector of paths as a vector of nodes T 
-\end{DoxyReturn}
 \mbox{\Hypertarget{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}\label{classGraph_a00a8118f05fc1b0ab2e821618e4a90ac}} 
 \index{Graph$<$ T $>$@{Graph$<$ T $>$}!edmondKarpFlux@{edmondKarpFlux}}
 \index{edmondKarpFlux@{edmondKarpFlux}!Graph$<$ T $>$@{Graph$<$ T $>$}}
@@ -115,12 +119,12 @@ Algorithm to calculate the maximum size of a group that can travel separately Ba
 \begin{DoxyReturn}{Returns}
 maximum group size for the graph 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}\label{classGraph_a9b3bd0a6762247602143c7ead95fc4bf}} 
+\mbox{\Hypertarget{classGraph_a740b9faf9f19dd485602f67054154514}\label{classGraph_a740b9faf9f19dd485602f67054154514}} 
 \index{Graph$<$ T $>$@{Graph$<$ T $>$}!FindPathGivenGroupSize@{FindPathGivenGroupSize}}
 \index{FindPathGivenGroupSize@{FindPathGivenGroupSize}!Graph$<$ T $>$@{Graph$<$ T $>$}}
 \doxysubsubsection{\texorpdfstring{FindPathGivenGroupSize()}{FindPathGivenGroupSize()}}
 {\footnotesize\ttfamily template$<$class T $>$ \\
-std\+::map$<$ vector$<$ T $>$, T $>$ \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::Find\+Path\+Given\+Group\+Size (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta,  }\item[{int}]{group\+Size }\end{DoxyParamCaption})}
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::\+Find\+Path\+Given\+Group\+Size (\begin{DoxyParamCaption}\item[{T}]{st,  }\item[{T}]{ta,  }\item[{int}]{group\+Size }\end{DoxyParamCaption})}
 
 Algorithm to calculate the paths for a splittable group of a given size Based on the Edmond Karp variant of the Ford Fulkerson method for determining maximum flow Sets appropriate flux for each edge 
 \begin{DoxyParams}{Parameters}
@@ -141,7 +145,7 @@ map of the paths the group should take
 {\footnotesize\ttfamily template$<$class T $>$ \\
 int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::first\+Algorithm (\begin{DoxyParamCaption}\item[{T}]{start,  }\item[{T}]{end }\end{DoxyParamCaption})}
 
-Computes the highest capacity path in the graph Works for unseperable groups Based on the algorithm for higest capacity path in the theory slides 
+Prints the caracteristics of all edges in the graph Show origin, destination, flux and capacity Computes the highest capacity path in the graph Works for unseperable groups Based on the algorithm for higest capacity path in the theory slides 
 \begin{DoxyParams}{Parameters}
 {\em st} & number associated with start vertex \\
 \hline
@@ -204,14 +208,21 @@ Computes the longest path, in duration, between 2 nodes Similar to dijkstra\text
 \begin{DoxyReturn}{Returns}
 longest duration between ta and st nodes 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classGraph_afd5c29368e4760b0b9a81d4967187775}\label{classGraph_afd5c29368e4760b0b9a81d4967187775}} 
-\index{Graph$<$ T $>$@{Graph$<$ T $>$}!printGraph@{printGraph}}
-\index{printGraph@{printGraph}!Graph$<$ T $>$@{Graph$<$ T $>$}}
-\doxysubsubsection{\texorpdfstring{printGraph()}{printGraph()}}
+\mbox{\Hypertarget{classGraph_a653077e6fdcea071088335aa4bc58a8c}\label{classGraph_a653077e6fdcea071088335aa4bc58a8c}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!paretoOptimalGroupSizeAndTransportShift@{paretoOptimalGroupSizeAndTransportShift}}
+\index{paretoOptimalGroupSizeAndTransportShift@{paretoOptimalGroupSizeAndTransportShift}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{paretoOptimalGroupSizeAndTransportShift()}{paretoOptimalGroupSizeAndTransportShift()}}
 {\footnotesize\ttfamily template$<$class T $>$ \\
-void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::print\+Graph}
+void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::pareto\+Optimal\+Group\+Size\+And\+Transport\+Shift (\begin{DoxyParamCaption}\item[{T}]{origin,  }\item[{T}]{target }\end{DoxyParamCaption})}
 
-Prints the caracteristics of all edges in the graph Show origin, destination, flux and capacity \mbox{\Hypertarget{classGraph_ae667eecd89799c645634c0d78a3e98e6}\label{classGraph_ae667eecd89799c645634c0d78a3e98e6}} 
+Sets the paths field to be all the pareto-\/optimal solutions (paths) from origin to target nodes 
+\begin{DoxyParams}{Parameters}
+{\em origin} & is the origin node \\
+\hline
+{\em target} & is the target node \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_ae667eecd89799c645634c0d78a3e98e6}\label{classGraph_ae667eecd89799c645634c0d78a3e98e6}} 
 \index{Graph$<$ T $>$@{Graph$<$ T $>$}!printPath@{printPath}}
 \index{printPath@{printPath}!Graph$<$ T $>$@{Graph$<$ T $>$}}
 \doxysubsubsection{\texorpdfstring{printPath()}{printPath()}}
@@ -221,6 +232,26 @@ void \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::print\+Path (\begin{DoxyPa
 Prints all the paths and how many people go through each of them 
 \begin{DoxyParams}{Parameters}
 {\em printable\+Path} & a map of paths, as a vector of nodes T, and number of people that can go through them \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_a67752a8ed6c82965ab0109769010d33a}\label{classGraph_a67752a8ed6c82965ab0109769010d33a}} 
+\index{Graph$<$ T $>$@{Graph$<$ T $>$}!recursivePathFinderLimited@{recursivePathFinderLimited}}
+\index{recursivePathFinderLimited@{recursivePathFinderLimited}!Graph$<$ T $>$@{Graph$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{recursivePathFinderLimited()}{recursivePathFinderLimited()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+int \mbox{\hyperlink{classGraph}{Graph}}$<$ T $>$\+::recursive\+Path\+Finder\+Limited (\begin{DoxyParamCaption}\item[{T}]{current,  }\item[{T}]{target,  }\item[{int}]{current\+Cap,  }\item[{int}]{bfs\+Cap,  }\item[{int}]{max\+Cap\+Edges }\end{DoxyParamCaption})}
+
+This function performs a recursive DFS on the graph looking for all simple paths from origin to target that are within the \char`\"{}pareto-\/optimal\char`\"{} limitations defined by the pareto\+Optimal method above. 
+\begin{DoxyParams}{Parameters}
+{\em bfs\+Cap} & the minimum capacity limitation for a valid path to be explored \\
+\hline
+{\em max\+Cap\+Edges} & the maximum path size for exploration worth \\
+\hline
+{\em current\+Cap} & keeps the lesser edge capacity found during the path exploration, meaning the capacity that path can transport \\
+\hline
+{\em current} & the current node from where the path will be searched for \\
+\hline
+{\em target} & the target node for the path \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{classGraph_aa167310b94b212c2c924f4c68038c7e4}\label{classGraph_aa167310b94b212c2c924f4c68038c7e4}} 

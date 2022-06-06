@@ -1,5 +1,5 @@
 ///\file
-/// Graph, Vertex and Edge Classes aswell as the algorithms for each problem
+/// Graph, Vertex and Edge Classes as well as the algorithms for each problem
 
 /*
  * Graph.h
